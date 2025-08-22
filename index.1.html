@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Terminal Access</title>
+  <style>
+    :root { --fg:#D4D4D4; --bg:#000; --accent:#00FF00; --soft:#66FF66; }
+    
+    body {
+      background: var(--bg);
+      color: var(--accent);
+      font-family: monospace;
+      padding: 20px;
+      font-size: 1.2em; /* Base font size for all text */
+    }
+
+    #terminal {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* Password input styling */
+    input {
+      background: var(--bg);
+      border: none;
+      color: var(--accent);
+      font-family: monospace;
+      font-size: 1.2em; /* Much smaller password box */
+      outline: none;
+      width: 300px; /* Fixed width instead of 100% */
+      caret-color: var(--accent); /* Blinking cursor color */
+    }
+
+    /* Blinking cursor animation */
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    input:focus {
+      animation: blink 1s infinite;
+    }
+
+    /* Boot sequence and prompt text */
+    #boot, #prompt, #msg {
+      font-size: 1.2em; /* General terminal text size */
+    }
+
+    #video {
+      display: none; /* Video removed - will redirect to lorem instead */
+    }
+
+    .line {
+      margin: 5px 0;
+    }
+
+    /* Glow effect for all text elements */
+    #boot, #prompt, #msg, input {
+      text-shadow: 0 0 2px var(--accent), 0 0 12px var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal">
+    <div class="line" id="boot"></div>
+    <div class="line" id="prompt"></div>
+    <input type="password" id="password" autofocus />
+    <div class="line" id="msg"></div>
+  </div>
+
+  <script src="script.js"></script>
+  
+  <script>
+    /* ================== COLOR/GLOW ================== */
+    (function(){
+      const terminals = [document.getElementById('boot'), document.getElementById('prompt'), document.getElementById('msg'), document.getElementById('password')];
+      let colorIndex=2; // Default to soft green (option 3)
+      const colors=['#CCCCCC','#00FF00','#66FF66'];
+      
+      function apply(){
+        terminals.forEach(el=>{ if(!el) return;
+          el.style.color = colors[colorIndex];
+          el.style.textShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`; // Glow always on
+        });
+      }
+      
+      document.addEventListener('keydown', (e)=>{
+        if (e.key==='1'||e.key==='2'||e.key==='3'){ colorIndex=parseInt(e.key,10)-1; apply(); }
+      });
+      
+      apply();
+    })();
+  </script>
+</body>
+</html>

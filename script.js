@@ -9,8 +9,8 @@ const correctPassword = 'A$$ANGE';
 const accessGrantedSequence = [
   'ACCESS GRANTED',
   'DECRYPTING PAYLOAD...',
-  'LOADING VIDEO MODULE',
-  'EXECUTION AUTHORIZED',
+  'LOADING DOCUMENT MODULE',
+  'REDIRECTING TO SECURE CHANNEL...',
 ];
 
 const accessDeniedMessages = [
@@ -39,8 +39,8 @@ function scrambleText(element, finalText, callback) {
       if (callback) callback();
     }
 
-    iteration += 1 / 2;
-  }, 30);
+    iteration += 1; // Reveal 1 character at a time instead of 0.5
+  }, 15); // Much faster: 15ms instead of 30ms
 }
 
 function runSequence(lines, element, delay = 500, done) {
@@ -66,9 +66,10 @@ passwordInput.addEventListener('keydown', function(e) {
 
     if (attempt === correctPassword) {
       passwordInput.style.display = 'none';
-      runSequence(accessGrantedSequence, msg, 700, () => {
-        video.style.display = 'block';
-        video.play();
+      runSequence(accessGrantedSequence, msg, 300, () => {
+        setTimeout(() => {
+          window.location.href = 'lorem.1.html';
+        }, 1000);
       });
     } else {
       const denial = accessDeniedMessages[Math.floor(Math.random() * accessDeniedMessages.length)];
@@ -89,6 +90,6 @@ const bootSequence = [
   '[WARN] Clearance level: REDACTED'
 ];
 
-runSequence(bootSequence, boot, 400, () => {
+runSequence(bootSequence, boot, 200, () => {
   scrambleText(prompt, '> ENTER AUTHORIZATION PASSWORD:');
 });
