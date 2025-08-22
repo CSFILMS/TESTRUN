@@ -1,0 +1,3 @@
+[33m09a0e71[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Rename files for proper web hosting: index.1.html -> index.html, lorem.1.html -> lorem.html
+[33meca447e[m Complete overhaul: New presentation system with green overlay, video support, and improved UI
+[33m726c398[m Initial commit
