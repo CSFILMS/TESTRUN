@@ -625,11 +625,7 @@ Contact:
     
          const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
     
-                    // Set specific default modes for certain pages
-     pageModes[4] = IMG_SMALL_SIDE; // Page 5 (index 4) defaults to small side mode
-     pageModes[17] = IMG_SIDE; // Page 18 (index 17) defaults to side mode
-     pageModes[22] = IMG_BG; // Page 23 (index 22) defaults to fullscreen (background) mode
-     pageModes[23] = IMG_SIDE; // Page 24 (index 23) defaults to side mode
+                    // All pages start with IMG_OFF and auto-detect images
      
      // Auto-detect pages with images and set them to side mode
      // This will be handled dynamically when images are found
@@ -687,8 +683,12 @@ Contact:
          else if (mode === IMG_SMALL_SIDE) imgEl.className = 'show-small-side';
        }
       
-      // Adjust text container width based on current image mode
-      adjustTextContainerWidth(pageModes[pageIndex]);
+      // Only adjust text if there's actually an image showing
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        adjustTextContainerWidth(pageModes[pageIndex]);
+      } else {
+        adjustTextContainerWidth(IMG_OFF);
+      }
     }
     
     // Create image for a page number - tries multiple formats
@@ -711,6 +711,15 @@ Contact:
       img.addEventListener('load', () => {
         console.log(`Image loaded successfully for page ${pageNumber}`);
         img.style.opacity = '1';
+        
+        // Update page mode and layout if this is the current page
+        const pageIndex = pageNumber - 1;
+        if (pageIndex === currentPage) {
+          if (pageModes[pageIndex] === IMG_OFF) {
+            pageModes[pageIndex] = IMG_SIDE;
+          }
+          adjustTextContainerWidth(pageModes[pageIndex]);
+        }
         
         // Apply current overlay mode to new image
         applyOverlayToImage(img, currentOverlayMode);
@@ -878,7 +887,7 @@ Contact:
     
     // Simple image matching: page N looks for photo N with any extension
     function tryImageFormats(img, pageNumber, formatIndex) {
-      const formats = ['jpg', 'jpeg', 'webp', 'png', 'gif'];
+      const formats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'svg', 'avif'];
       
       if (formatIndex >= formats.length) {
         // All formats failed, remove the image
