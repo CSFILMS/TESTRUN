@@ -361,9 +361,18 @@
 
 
 
+     
 THE SIX BILLION DOLLAR MAN
 
+ 
+ 
+ 
+ 
 PRESS [F] FOR FULLSCREEN
+
+
+
+
 
 
 
@@ -887,29 +896,38 @@ Contact:
       }
     }
     
-    // Simple image matching: page N looks for photo N with any extension
+    // Universal image support - tries all possible formats
     function tryImageFormats(img, pageNumber, formatIndex) {
-      const formats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'svg', 'avif'];
+      // Start with most compatible formats, then try everything else
+      const formats = [
+        'jpg', 'jpeg', 'png', 'gif',  // Universal support
+        'webp', 'svg',                // Modern browsers
+        'bmp', 'tiff', 'tif',         // Desktop browsers
+        'avif', 'jfif', 'pjpeg'       // Newer formats
+      ];
       
       if (formatIndex >= formats.length) {
         // All formats failed, remove the image
+        console.log(`No image found for page ${pageNumber}`);
         img.remove();
         return;
       }
       
-      // Remove any existing error listeners
-      img.removeEventListener('error', img.errorHandler);
+      const format = formats[formatIndex];
+      const testSrc = `photos/photo${pageNumber}.${format}`;
       
-      // Create new error handler for this format
-      img.errorHandler = () => {
-        console.log(`Format ${formats[formatIndex]} failed for page ${pageNumber}, trying next...`);
-        // Try next format
+      // Test if this format file exists by creating a test image
+      const testImg = new Image();
+      testImg.onload = function() {
+        // File exists and format is supported - use it!
+        console.log(`✅ Found working image: ${testSrc}`);
+        img.src = testSrc;
+      };
+      testImg.onerror = function() {
+        // This format/file doesn't work, try next
         tryImageFormats(img, pageNumber, formatIndex + 1);
       };
-      
-      img.addEventListener('error', img.errorHandler);
-      console.log(`Trying photo${pageNumber}.${formats[formatIndex]} for page ${pageNumber}`);
-      img.src = `photos/photo${pageNumber}.${formats[formatIndex]}`;
+      testImg.src = testSrc;
     }
 
               /* ================== TEXT TRUNCATION ================== */
