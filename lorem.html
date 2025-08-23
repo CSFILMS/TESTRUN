@@ -816,31 +816,17 @@ Contact:
     
     // Try different image formats and available image names
     function tryImageFormats(img, pageNumber, formatIndex) {
-      // Map page numbers to actual available images
+      // Map page numbers to actual available images - PHOTO NUMBER = PAGE NUMBER
       const imageMapping = {
-        1: 'photo5.jpg',
-        2: 'photo7.webp', 
-        3: 'photo9.jpg',
-        4: 'photo11.jpeg',
-        5: 'photo18.jpeg',
-        6: 'photo23.jpg',
-        7: 'photo666.gif',
-        8: 'photo998.jpg',
-        9: 'photoabz.jpg',
-        10: 'photo5.jpg', // Reuse images for additional pages
-        11: 'photo7.webp',
-        12: 'photo9.jpg',
-        13: 'photo11.jpeg',
-        14: 'photo18.jpeg',
-        15: 'photo23.jpg',
-        16: 'photo666.gif',
-        17: 'photo998.jpg',
-        18: 'photoabz.jpg',
-        19: 'photo5.jpg',
-        20: 'photo7.webp',
-        21: 'photo9.jpg',
-        22: 'photo11.jpeg',
-        23: 'photo18.jpeg'
+        5: 'photo5.jpg',
+        7: 'photo7.webp', 
+        9: 'photo9.jpg',
+        11: 'photo11.jpeg',
+        18: 'photo18.jpeg',
+        23: 'photo23.jpg',
+        666: 'photo666.gif',
+        998: 'photo998.jpg',
+        999: 'photoabz.jpg' // Using 999 for photoabz since it's not a clear number
       };
       
       // If we have a mapped image for this page, use it
