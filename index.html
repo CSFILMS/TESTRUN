@@ -32,7 +32,7 @@
       background: var(--bg);
       color: var(--fg);
       font-family: monospace;
-      font-size: 1rem;
+      font-size: 1.4rem;
       line-height: 1.6;
       user-select: none;
       min-height: 100vh;
@@ -174,7 +174,7 @@
   
   <script>
     // SIMPLE ZOOM SYSTEM - MATCH LOREM DEFAULTS
-    let fontSize = 1.0;
+    let fontSize = 1.4;
     
     function zoomIn() {
       fontSize = Math.min(fontSize + 0.15, 2.5);
@@ -189,7 +189,7 @@
     }
     
     function resetZoom() {
-      fontSize = 1.1;
+      fontSize = 1.4;
       updateFontSize();
       console.log('Zoom RESET:', fontSize + 'rem');
     }
@@ -323,8 +323,9 @@
       customCursor.style.display = 'none';
     });
     
-    // Initialize color scheme
+    // Initialize color scheme and font size
     applyColors();
+    updateFontSize();
   </script>
 </body>
 </html>

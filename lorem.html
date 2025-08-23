@@ -211,26 +211,22 @@
        box-sizing: border-box;
        overflow: hidden;
      }
-         #unscramble { 
-       white-space: pre-wrap; 
-       font-size: 1.4rem;
-       line-height: 1.8;
-       word-wrap: break-word;
-       overflow-wrap: break-word;
-       height: 100%;
-       overflow: hidden;
-       width: 100%;
-       box-sizing: border-box;
-       max-width: 100%;
-       /* Preserve indentation for wrapped lines */
-       text-indent: 0;
-       hanging-punctuation: first;
-       /* Keep indentation when text wraps */
-       white-space: pre-wrap;
-       word-break: keep-all;
-       /* Preserve hanging indent for wrapped lines */
-       text-indent: hanging each-line;
-     }
+                  #unscramble { 
+      white-space: pre-wrap; 
+      font-size: 1.4rem;
+      line-height: 1.8;
+      word-wrap: normal;
+      overflow-wrap: normal;
+      height: 100%;
+      overflow: hidden;
+      width: 100%;
+      box-sizing: border-box;
+      max-width: 100%;
+      /* Preserve original formatting - no text wrapping modifications */
+      text-indent: 0;
+      word-break: normal;
+      hyphens: none;
+    }
      
      /* Handle indented line wrapping - preserve indentation for continuation lines */
      #unscramble .indented-line {
@@ -319,14 +315,29 @@
          z-index: 2 !important;
        }
     
-         #text-wrap.side-mode #unscramble {
-       width: 100% !important;
-       max-width: 100% !important;
-       overflow: visible !important;
-       white-space: pre-wrap !important;
-       word-wrap: break-word !important;
-       overflow-wrap: break-word !important;
-     }
+                  #text-wrap.side-mode #unscramble {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+      white-space: pre-wrap !important;
+      word-wrap: normal !important;
+      overflow-wrap: normal !important;
+      hyphens: none !important;
+      text-indent: 0 !important;
+    }
+    
+    #text-wrap.small-side-mode #unscramble {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+      white-space: pre-wrap !important;
+      word-wrap: normal !important;
+      overflow-wrap: normal !important;
+      hyphens: none !important;
+      text-indent: 0 !important;
+      font-size: 1.2rem !important;
+      line-height: 1.6 !important;
+    }
      
      /* Special rule: make slide 11 text slightly smaller to prevent navbar overlap */
      #page[data-page="11"] #unscramble {
@@ -479,9 +490,9 @@ a historic first for a publisher.
 
 In 2010, WikiLeaks was financially blacklisted by 
 
-		> Visa
-		> Mastercard
-		> PayPal 
+	> Visa
+	> Mastercard
+	> PayPal 
 
 Assange turned to cryptocurrency
 
@@ -538,22 +549,27 @@ Help us break it.
 
 What We're Asking:
 
-> Initial crypto contribution to fund distribution, promotion and an impact campaign.
+	> Initial crypto contribution to fund distribution, 
+	  promotion and an impact campaign.
 
-> Public endorsement (if desired) to galvanise the broader crypto sphere.
+	> Public endorsement (if desired) to galvanise 
+	  the broader crypto sphere.
 
-> Strategic guidance to Bitcoin-aligned distribution tools.
+	> Strategic guidance to Bitcoin-aligned distribution tools.
 		
 
 
 
 Use of Funds:
 
-> Academy screenings and crypto-native distribution (NFT access passes, decentralised streaming)
+	> Academy screenings and crypto-native distribution 
+	  (NFT access passes, decentralised streaming)
 
-> Legal and security support for contributors in high-risk zones
+	> Legal and security support for contributors 
+	  in high-risk zones
 
-> Aggressive promotional push now that Assange is free and public attention is resurgent
+	> Aggressive promotional push now that Assange is free 
+	  and public attention is resurgent
 
 
 
@@ -561,8 +577,8 @@ Use of Funds:
 
 Transparency guaranteed: 
  	      
-      > funds held in multi-sig wallet 
-      with real-time public ledger.
+	> funds held in multi-sig wallet 
+	  with real-time public ledger.
 
 
 
@@ -584,9 +600,9 @@ You understand that speech without infrastructure is performative.
 
 Assange's prosecution is a prosecution of infrastructure: 
 
-  > Publishing, 
-  > cryptography, 
-  > financial independence.
+	> Publishing, 
+	> cryptography, 
+	> financial independence.
 
 Supporting this film continues the work you've always done.
 
@@ -596,7 +612,6 @@ Supporting this film continues the work you've always done.
 
 The crypto community, the only network that kept Assange alive 
 can now ensure he's not erased.
-		
 
 
 
