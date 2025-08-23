@@ -631,17 +631,8 @@ Contact:
      pageModes[22] = IMG_BG; // Page 23 (index 22) defaults to fullscreen (background) mode
      pageModes[23] = IMG_SIDE; // Page 24 (index 23) defaults to side mode
      
-     // Automatically set pages with images to side mode (unless they have specific overrides)
-     const pagesWithImages = [5, 7, 9, 11, 23, 666, 998, 999];
-     pagesWithImages.forEach(pageNum => {
-       const pageIndex = pageNum - 1; // Convert to 0-based index
-       if (pageIndex >= 0 && pageIndex < pages.length) {
-         // Only set to side mode if no specific override exists
-         if (pageModes[pageIndex] === IMG_OFF) {
-           pageModes[pageIndex] = IMG_SIDE;
-         }
-       }
-     });
+     // Auto-detect pages with images and set them to side mode
+     // This will be handled dynamically when images are found
 
     // DOM
     const pageEl = document.getElementById('page');
@@ -682,8 +673,13 @@ Contact:
         imgEl = createImageForPage(pageNumber);
       }
       
-             // Show image if it exists and mode isn't off
-       if (imgEl && pageModes[pageIndex] !== IMG_OFF) {
+             // Show image if it exists - auto-set mode if needed
+       if (imgEl) {
+         // If mode is OFF but we have an image, auto-set to SIDE mode
+         if (pageModes[pageIndex] === IMG_OFF) {
+           pageModes[pageIndex] = IMG_SIDE;
+         }
+         
          const mode = pageModes[pageIndex];
          if (mode === IMG_BG) imgEl.className = 'show-bg';
          else if (mode === IMG_BELOW) imgEl.className = 'show-below';
@@ -880,27 +876,8 @@ Contact:
       }
     }
     
-    // Try different image formats and available image names
+    // Simple image matching: page N looks for photo N with any extension
     function tryImageFormats(img, pageNumber, formatIndex) {
-             // Map page numbers to actual available images - PHOTO NUMBER = PAGE NUMBER
-       const imageMapping = {
-         5: 'photo5.jpg',
-         7: 'photo7.webp', 
-         9: 'photo9.jpg',
-         11: 'photo11.jpeg',
-         23: 'photo23.jpg',
-         666: 'photo666.gif',
-         998: 'photo998.jpg',
-         999: 'photoabz.jpg' // Using 999 for photoabz since it's not a clear number
-       };
-      
-      // If we have a mapped image for this page, use it
-      if (imageMapping[pageNumber]) {
-        img.src = `photos/${imageMapping[pageNumber]}`;
-        return;
-      }
-      
-      // Fallback: try standard naming with different formats
       const formats = ['jpg', 'jpeg', 'webp', 'png', 'gif'];
       
       if (formatIndex >= formats.length) {
@@ -920,7 +897,7 @@ Contact:
       };
       
       img.addEventListener('error', img.errorHandler);
-      console.log(`Trying format ${formats[formatIndex]} for page ${pageNumber}`);
+      console.log(`Trying photo${pageNumber}.${formats[formatIndex]} for page ${pageNumber}`);
       img.src = `photos/photo${pageNumber}.${formats[formatIndex]}`;
     }
 
