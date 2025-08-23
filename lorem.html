@@ -363,6 +363,8 @@
 
 THE SIX BILLION DOLLAR MAN
 
+PRESS [F] FOR FULLSCREEN
+
 
 
 A film by Eugene Jarecki
@@ -1055,7 +1057,19 @@ Contact:
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
       else if (k==='c'||k==='C'){ toggleGreenOverlay('off'); }
+      else if (k==='f'||k==='F'){ toggleFullscreen(); }
     });
+    
+    // Fullscreen functionality
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
 
     /* ================== COLOR/GLOW ================== */
     (function(){
