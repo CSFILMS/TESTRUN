@@ -4,139 +4,170 @@
   <meta charset="UTF-8" />
   <title>Terminal Access</title>
   <style>
-    :root { --fg:#D4D4D4; --bg:#000; --accent:#00FF00; --soft:#66FF66; }
-    
-    /* CRT scanline effect */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 2px,
-        rgba(0, 255, 0, 0.03) 2px,
-        rgba(0, 255, 0, 0.03) 4px
-      );
-      pointer-events: none;
-      z-index: 99998;
+    /* COMPLETE RESET */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
     
-    /* Black scanlines on top */
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.20) 0px,
-        rgba(0, 0, 0, 0.20) 2px,
-        transparent 2px,
-        transparent 4px
-      );
-      pointer-events: none;
-      z-index: 99999;
+    /* FORCE NO SCROLLING AT ALL LEVELS */
+    html {
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
     }
     
     body {
-      background: var(--bg);
-      color: var(--accent);
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      color: #00FF00;
       font-family: monospace;
-      padding: 5vw;
-      font-size: 1.4rem; /* Base font size for all text - matches lorem */
-      min-height: 100vh;
-      box-sizing: border-box;
-      max-width: 80vw;
-      margin: 20vh auto;
+      font-size: 1.4rem;
       line-height: 1.6;
-    }
-
-    #terminal {
-      max-width: 700px;
       margin: 0;
-      margin-top: 25vh;
-      margin-left: 10vw;
-      text-align: left;
+      padding: 0;
     }
-
-    /* Password input styling */
+    
+    /* MAIN CONTAINER - FIXED SIZE, NO SCROLL */
+    #main-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    /* TERMINAL POSITIONING */
+    #terminal {
+      position: absolute;
+      top: 20vh;
+      left: 10vw;
+      right: 10vw;
+      max-width: 60vw;
+    }
+    
+    /* INPUT STYLING */
     input {
-      background: var(--bg);
+      background: #000;
       border: none;
-      color: var(--accent);
+      color: #00FF00;
       font-family: monospace;
-      font-size: 1.4rem; /* Much smaller password box */
+      font-size: inherit;
       outline: none;
-      width: 300px; /* Fixed width instead of 100% */
-      caret-color: var(--accent); /* Blinking cursor color */
+      width: 30vw;
+      caret-color: #00FF00;
     }
-
-    /* Blinking cursor animation */
+    
+    /* BLINKING CURSOR */
+    input:focus {
+      animation: blink 1s infinite;
+    }
+    
     @keyframes blink {
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
     }
-
-    input:focus {
-      animation: blink 1s infinite;
-    }
-
-    /* Boot sequence and prompt text */
-    #boot, #prompt, #msg {
-      font-size: 1.4rem; /* General terminal text size - matches lorem */
-    }
-
-    #video {
-      display: none; /* Video removed - will redirect to lorem instead */
-    }
-
+    
+    /* TEXT ELEMENTS */
     .line {
-      margin: 5px 0;
+      margin: 1vh 0;
     }
-
-    /* Glow effect for all text elements */
+    
     #boot, #prompt, #msg, input {
-      text-shadow: 0 0 2px var(--accent), 0 0 12px var(--accent);
+      text-shadow: 0 0 2px #00FF00, 0 0 12px #00FF00;
+    }
+    
+    /* HIDE ALL SCROLLBARS */
+    ::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
   </style>
 </head>
 <body>
-  <div id="terminal">
-    <div id="boot"></div>
-    <div class="line" id="prompt"></div>
-    <input type="password" id="password" autofocus />
-    <div class="line" id="msg"></div>
+  <div id="main-container">
+    <div id="terminal">
+      <div id="boot"></div>
+      <div class="line" id="prompt"></div>
+      <input type="password" id="password" autofocus />
+      <div class="line" id="msg"></div>
+    </div>
   </div>
 
   <script src="script.js"></script>
   
   <script>
-    /* ================== COLOR/GLOW ================== */
-    (function(){
-      const terminals = [document.getElementById('boot'), document.getElementById('prompt'), document.getElementById('msg'), document.getElementById('password')];
-      let colorIndex=2; // Default to soft green (option 3)
-      const colors=['#CCCCCC','#00FF00','#66FF66'];
+    // SIMPLE ZOOM SYSTEM
+    let fontSize = 1.4;
+    
+    function zoomIn() {
+      fontSize = Math.min(fontSize + 0.2, 3.0);
+      updateFontSize();
+      console.log('Zoom IN:', fontSize + 'rem');
+    }
+    
+    function zoomOut() {
+      fontSize = Math.max(fontSize - 0.2, 0.8);
+      updateFontSize();
+      console.log('Zoom OUT:', fontSize + 'rem');
+    }
+    
+    function resetZoom() {
+      fontSize = 1.4;
+      updateFontSize();
+      console.log('Zoom RESET:', fontSize + 'rem');
+    }
+    
+    function updateFontSize() {
+      const size = fontSize + 'rem';
+      document.body.style.fontSize = size;
       
-      function apply(){
-        terminals.forEach(el=>{ if(!el) return;
-          el.style.color = colors[colorIndex];
-          el.style.fontSize = '1.4rem'; // Preserve font size - matches lorem
-          el.style.textShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`; // Glow always on
-        });
-      }
-      
-      document.addEventListener('keydown', (e)=>{
-        if (e.key==='1'||e.key==='2'||e.key==='3'){ colorIndex=parseInt(e.key,10)-1; apply(); }
+      // Update all text elements
+      const elements = document.querySelectorAll('#boot, #prompt, #msg, input');
+      elements.forEach(el => {
+        if (el) el.style.fontSize = size;
       });
-      
-      apply();
-    })();
+    }
+    
+    // Keyboard controls
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        zoomIn();
+      } else if (e.key === '-') {
+        e.preventDefault();
+        zoomOut();
+      } else if (e.key === '0') {
+        e.preventDefault();
+        resetZoom();
+      }
+    });
+    
+    // ADDITIONAL SCROLL PREVENTION
+    function preventScroll(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    
+    // Block all scroll events
+    document.addEventListener('wheel', preventScroll, { passive: false });
+    document.addEventListener('touchmove', preventScroll, { passive: false });
+    document.addEventListener('scroll', preventScroll, { passive: false });
+    
+    console.log('Fixed container scroll prevention active!');
+    console.log('Press + to zoom in, - to zoom out, 0 to reset');
   </script>
 </body>
 </html>
