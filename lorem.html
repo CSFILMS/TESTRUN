@@ -122,13 +122,18 @@
       overflow: visible; /* Allow text to be visible */
     }
     
-    /* Simple image display */
-    #page img {
-      display: none;
-      filter: brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5); /* Default: full green overlay */
-      /* Ensure all image formats including GIFs display properly */
-      image-rendering: auto;
-    }
+         /* Simple image display */
+     #page img {
+       display: none;
+       filter: brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5); /* Default: full green overlay - original brightness */
+       /* Ensure all image formats including GIFs display properly */
+       image-rendering: auto;
+     }
+     
+     /* Special rule: dim only photo7 */
+     #page img[id="img-7"] {
+       filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo7 dimmed as requested */
+     }
     
     #page img.show-bg {
       position: absolute;
@@ -149,16 +154,16 @@
       object-fit: contain;
     }
     
-    #page img.show-side {
-      display: block;
-      position: absolute;
-      right: 1rem;
-      top: 2rem;
-      max-width: 35%;
-      max-height: 80%;
-      object-fit: contain;
-      z-index: 1;
-    }
+              #page img.show-side {
+       display: block;
+       position: absolute;
+       right: 1rem;
+       top: 2rem;
+       max-width: 35%;
+       max-height: 80%;
+       object-fit: contain;
+       z-index: 1;
+     }
     
     /* Text container width is now controlled by JavaScript */
     
@@ -428,8 +433,8 @@ Assange turned to cryptocurrency
 
 
 
-		"Bitcoin is the real Occupy Wall Street," 
-                				-Julian Assange
+	"Bitcoin is the real Occupy Wall Street," 
+                   -Julian Assange
 
 
 
@@ -579,9 +584,9 @@ Contact:
     
     const pageModes = new Array(pages.length).fill(IMG_BG); // Default to background mode for all pages
     
-    // Set specific default modes for certain pages
-    pageModes[17] = IMG_SIDE; // Page 18 (index 17) defaults to side mode
-    pageModes[22] = IMG_SIDE; // Page 23 (index 22) defaults to side mode
+         // Set specific default modes for certain pages
+     pageModes[17] = IMG_SIDE; // Page 18 (index 17) defaults to side mode
+     pageModes[22] = IMG_BG; // Page 23 (index 22) defaults to fullscreen (background) mode
 
     // DOM
     const pageEl = document.getElementById('page');
@@ -657,6 +662,13 @@ Contact:
         
         // Apply current overlay mode to new image
         applyOverlayToImage(img, currentOverlayMode);
+      });
+      
+      // Handle image loading errors gracefully
+      img.addEventListener('error', () => {
+        console.log(`Failed to load image for page ${pageNumber}`);
+        img.style.display = 'none';
+        // Don't remove the image element - just hide it
       });
       
       return img;
@@ -802,8 +814,42 @@ Contact:
       }
     }
     
-    // Try different image formats
+    // Try different image formats and available image names
     function tryImageFormats(img, pageNumber, formatIndex) {
+      // Map page numbers to actual available images
+      const imageMapping = {
+        1: 'photo5.jpg',
+        2: 'photo7.webp', 
+        3: 'photo9.jpg',
+        4: 'photo11.jpeg',
+        5: 'photo18.jpeg',
+        6: 'photo23.jpg',
+        7: 'photo666.gif',
+        8: 'photo998.jpg',
+        9: 'photoabz.jpg',
+        10: 'photo5.jpg', // Reuse images for additional pages
+        11: 'photo7.webp',
+        12: 'photo9.jpg',
+        13: 'photo11.jpeg',
+        14: 'photo18.jpeg',
+        15: 'photo23.jpg',
+        16: 'photo666.gif',
+        17: 'photo998.jpg',
+        18: 'photoabz.jpg',
+        19: 'photo5.jpg',
+        20: 'photo7.webp',
+        21: 'photo9.jpg',
+        22: 'photo11.jpeg',
+        23: 'photo18.jpeg'
+      };
+      
+      // If we have a mapped image for this page, use it
+      if (imageMapping[pageNumber]) {
+        img.src = `photos/${imageMapping[pageNumber]}`;
+        return;
+      }
+      
+      // Fallback: try standard naming with different formats
       const formats = ['jpg', 'jpeg', 'webp', 'png', 'gif'];
       
       if (formatIndex >= formats.length) {
@@ -1017,27 +1063,31 @@ Contact:
       }
     }
     
-    // Apply overlay to a specific image
-    function applyOverlayToImage(img, mode) {
-      if (mode === 'full') {
-        img.style.filter = 'brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5)';
-      } else if (mode === 'half') {
-        img.style.filter = 'brightness(0.7) sepia(0.5) hue-rotate(60deg) saturate(1.2)';
-      } else if (mode === 'off') {
-        img.style.filter = 'brightness(0.7)';
-      }
-    }
+         // Apply overlay to a specific image
+     function applyOverlayToImage(img, mode) {
+       // Check if this is photo7 (which should stay dimmed)
+       const isPhoto7 = img.id === 'img-7';
+       const baseBrightness = isPhoto7 ? 0.3 : 0.7;
+       
+       if (mode === 'full') {
+         img.style.filter = `brightness(${baseBrightness}) sepia(1) hue-rotate(60deg) saturate(1.5)`;
+       } else if (mode === 'half') {
+         img.style.filter = `brightness(${baseBrightness}) sepia(0.5) hue-rotate(60deg) saturate(1.2)`;
+       } else if (mode === 'off') {
+         img.style.filter = `brightness(${baseBrightness})`;
+       }
+     }
     
-    // Apply overlay to a specific video
-    function applyOverlayToVideo(video, mode) {
-      if (mode === 'full') {
-        video.style.filter = 'brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5)';
-      } else if (mode === 'half') {
-        video.style.filter = 'brightness(0.7) sepia(0.5) hue-rotate(60deg) saturate(1.2)';
-      } else if (mode === 'off') {
-        video.style.filter = 'brightness(0.7)';
-      }
-    }
+         // Apply overlay to a specific video
+     function applyOverlayToVideo(video, mode) {
+       if (mode === 'full') {
+         video.style.filter = 'brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5)';
+       } else if (mode === 'half') {
+         video.style.filter = 'brightness(0.7) sepia(0.5) hue-rotate(60deg) saturate(1.2)';
+       } else if (mode === 'off') {
+         video.style.filter = 'brightness(0.7)';
+       }
+     }
   </script>
 </body>
 </html>

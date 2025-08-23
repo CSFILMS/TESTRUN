@@ -25,8 +25,8 @@
       background: #000;
       color: #00FF00;
       font-family: monospace;
-      font-size: 1.4rem;
-      line-height: 1.6;
+      font-size: 1.1rem;
+      line-height: 1.4;
       margin: 0;
       padding: 0;
     }
@@ -42,16 +42,16 @@
       background: #000;
     }
     
-    /* TERMINAL POSITIONING */
+    /* TERMINAL POSITIONING - MOVED UP */
     #terminal {
       position: absolute;
-      top: 20vh;
-      left: 10vw;
-      right: 10vw;
-      max-width: 60vw;
+      top: 12vh;
+      left: 12vw;
+      right: 12vw;
+      max-width: 56vw;
     }
     
-    /* INPUT STYLING */
+    /* INPUT STYLING - MADE SMALLER */
     input {
       background: #000;
       border: none;
@@ -59,7 +59,7 @@
       font-family: monospace;
       font-size: inherit;
       outline: none;
-      width: 30vw;
+      width: 26vw;
       caret-color: #00FF00;
     }
     
@@ -73,13 +73,13 @@
       51%, 100% { opacity: 0; }
     }
     
-    /* TEXT ELEMENTS */
+    /* TEXT ELEMENTS - REDUCED SPACING */
     .line {
-      margin: 1vh 0;
+      margin: 0.8vh 0;
     }
     
     #boot, #prompt, #msg, input {
-      text-shadow: 0 0 2px #00FF00, 0 0 12px #00FF00;
+      text-shadow: 0 0 1.5px #00FF00, 0 0 10px #00FF00;
     }
     
     /* HIDE ALL SCROLLBARS */
@@ -108,23 +108,23 @@
   <script src="script.js"></script>
   
   <script>
-    // SIMPLE ZOOM SYSTEM
-    let fontSize = 1.4;
+    // SIMPLE ZOOM SYSTEM - ADJUSTED BASE SIZE
+    let fontSize = 1.1;
     
     function zoomIn() {
-      fontSize = Math.min(fontSize + 0.2, 3.0);
+      fontSize = Math.min(fontSize + 0.15, 2.5);
       updateFontSize();
       console.log('Zoom IN:', fontSize + 'rem');
     }
     
     function zoomOut() {
-      fontSize = Math.max(fontSize - 0.2, 0.8);
+      fontSize = Math.max(fontSize - 0.15, 0.6);
       updateFontSize();
       console.log('Zoom OUT:', fontSize + 'rem');
     }
     
     function resetZoom() {
-      fontSize = 1.4;
+      fontSize = 1.1;
       updateFontSize();
       console.log('Zoom RESET:', fontSize + 'rem');
     }
