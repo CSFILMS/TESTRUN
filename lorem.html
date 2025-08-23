@@ -159,6 +159,7 @@
        object-fit: contain;
        position: relative;
        top: -12rem;
+       z-index: -1;
      }
     
                              #page img.show-side {
@@ -649,7 +650,64 @@ Contact:
      const IMG_SIDE = 3;
      const IMG_SMALL_SIDE = 4;
     
+    // Helper functions for cycling through image modes
+    function getNextImageMode(currentMode) {
+      const modes = [IMG_OFF, IMG_BG, IMG_BELOW, IMG_SIDE, IMG_SMALL_SIDE];
+      const currentIndex = modes.indexOf(currentMode);
+      return modes[(currentIndex + 1) % modes.length];
+    }
+    
+    function getPreviousImageMode(currentMode) {
+      const modes = [IMG_OFF, IMG_BG, IMG_BELOW, IMG_SIDE, IMG_SMALL_SIDE];
+      const currentIndex = modes.indexOf(currentMode);
+      return modes[(currentIndex - 1 + modes.length) % modes.length];
+    }
+    
+    function markUserSetMode(pageIndex) {
+      const pageNumber = pageIndex + 1;
+      const imgEl = document.getElementById(`img-${pageNumber}`);
+      if (imgEl) {
+        imgEl.setAttribute('data-user-set', 'true');
+      }
+      // Save to localStorage for persistence across refreshes
+      savePageModeToStorage(pageIndex, pageModes[pageIndex]);
+    }
+    
+    function savePageModeToStorage(pageIndex, mode) {
+      try {
+        const storedModes = JSON.parse(localStorage.getItem('pitchDeckImageModes') || '{}');
+        storedModes[pageIndex] = mode;
+        localStorage.setItem('pitchDeckImageModes', JSON.stringify(storedModes));
+      } catch (e) {
+        console.warn('Could not save image mode to localStorage:', e);
+      }
+    }
+    
+    function loadPageModesFromStorage() {
+      try {
+        const storedModes = JSON.parse(localStorage.getItem('pitchDeckImageModes') || '{}');
+        Object.keys(storedModes).forEach(pageIndex => {
+          const index = parseInt(pageIndex);
+          if (index >= 0 && index < pageModes.length) {
+            pageModes[index] = storedModes[pageIndex];
+            // Mark as user-set so auto-detection doesn't override
+            setTimeout(() => {
+              const imgEl = document.getElementById(`img-${index + 1}`);
+              if (imgEl) {
+                imgEl.setAttribute('data-user-set', 'true');
+              }
+            }, 100);
+          }
+        });
+      } catch (e) {
+        console.warn('Could not load image modes from localStorage:', e);
+      }
+    }
+    
          const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
+    
+    // Load saved image modes from localStorage
+    loadPageModesFromStorage();
     
                     // All pages start with IMG_OFF and auto-detect images
      
@@ -697,8 +755,8 @@ Contact:
       
              // Show image if it exists - auto-set mode if needed
        if (imgEl) {
-         // If mode is OFF but we have an image, auto-set to SIDE mode
-         if (pageModes[pageIndex] === IMG_OFF) {
+         // Only auto-set to SIDE mode if this is the first time and user hasn't manually set a mode
+         if (pageModes[pageIndex] === IMG_OFF && !imgEl.hasAttribute('data-user-set')) {
            pageModes[pageIndex] = IMG_SIDE;
          }
          
@@ -741,7 +799,8 @@ Contact:
         // Update page mode and layout if this is the current page
         const pageIndex = pageNumber - 1;
         if (pageIndex === currentPage) {
-          if (pageModes[pageIndex] === IMG_OFF) {
+          // Only auto-set to SIDE mode on first load, don't override user choices
+          if (pageModes[pageIndex] === IMG_OFF && !img.hasAttribute('data-user-set')) {
             pageModes[pageIndex] = IMG_SIDE;
           }
           adjustTextContainerWidth(pageModes[pageIndex]);
@@ -1080,13 +1139,44 @@ Contact:
       else if (e.code==='ArrowLeft'){ e.preventDefault(); startPage(currentPage-1); }
 
       const k = e.key;
-             if (k==='ArrowUp'){ pageModes[currentPage]=(pageModes[currentPage]+1)%5; showImage(currentPage); }
-       else if (k==='ArrowDown'){ pageModes[currentPage]=(pageModes[currentPage]-1+5)%5; showImage(currentPage); }
-      else if (k==='b'||k==='B'){ pageModes[currentPage]=IMG_BG; showImage(currentPage); }
-      else if (k==='l'||k==='L'){ pageModes[currentPage]=IMG_BELOW; showImage(currentPage); }
-             else if (k==='s'||k==='S'){ pageModes[currentPage]=IMG_SIDE; showImage(currentPage); adjustTextForSideImage(); }
-       else if (k==='a'||k==='A'){ pageModes[currentPage]=IMG_SMALL_SIDE; showImage(currentPage); adjustTextForSideImage(); }
-       else if (k==='o'||k==='O'){ pageModes[currentPage]=IMG_OFF; showImage(currentPage); resetTextContainer(); }
+             if (k==='ArrowUp'){ 
+         pageModes[currentPage]=getNextImageMode(pageModes[currentPage]); 
+         markUserSetMode(currentPage); 
+         showImage(currentPage); 
+       }
+       else if (k==='ArrowDown'){ 
+         pageModes[currentPage]=getPreviousImageMode(pageModes[currentPage]); 
+         markUserSetMode(currentPage); 
+         showImage(currentPage); 
+       }
+      else if (k==='b'||k==='B'){ 
+        pageModes[currentPage]=IMG_BG; 
+        markUserSetMode(currentPage); 
+        showImage(currentPage); 
+      }
+      else if (k==='l'||k==='L'){ 
+        pageModes[currentPage]=IMG_BELOW; 
+        markUserSetMode(currentPage); 
+        showImage(currentPage); 
+      }
+             else if (k==='s'||k==='S'){ 
+        pageModes[currentPage]=IMG_SIDE; 
+        markUserSetMode(currentPage); 
+        showImage(currentPage); 
+        adjustTextForSideImage(); 
+      }
+       else if (k==='a'||k==='A'){ 
+        pageModes[currentPage]=IMG_SMALL_SIDE; 
+        markUserSetMode(currentPage); 
+        showImage(currentPage); 
+        adjustTextForSideImage(); 
+      }
+       else if (k==='o'||k==='O'){ 
+        pageModes[currentPage]=IMG_OFF; 
+        markUserSetMode(currentPage); 
+        showImage(currentPage); 
+        resetTextContainer(); 
+      }
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
       else if (k==='c'||k==='C'){ toggleGreenOverlay('off'); }
