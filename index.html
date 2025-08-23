@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Terminal Access</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root { --fg:#D4D4D4; --bg:#000; --accent:#00FF00; --soft:#66FF66; }
+    html, body { height:100%; }
+    
     /* COMPLETE RESET */
     * {
       box-sizing: border-box;
@@ -11,7 +15,7 @@
       padding: 0;
     }
     
-    /* FORCE NO SCROLLING AT ALL LEVELS */
+    /* FORCE NO SCROLLING */
     html {
       overflow: hidden;
       height: 100%;
@@ -20,15 +24,60 @@
     
     body {
       overflow: hidden;
-      height: 100%;
-      width: 100%;
-      background: #000;
-      color: #00FF00;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
       font-family: monospace;
-      font-size: 1.1rem;
-      line-height: 1.4;
+      font-size: 1rem;
+      line-height: 1.6;
+      user-select: none;
+      min-height: 100vh;
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      cursor: none;
+    }
+    
+    /* CRT scanline effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 255, 0, 0.03) 2px,
+        rgba(0, 255, 0, 0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 99998;
+    }
+    
+    /* Black scanlines on top */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.20) 0px,
+        rgba(0, 0, 0, 0.20) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      z-index: 99999;
     }
     
     /* MAIN CONTAINER - FIXED SIZE, NO SCROLL */
@@ -79,9 +128,22 @@
     }
     
     #boot, #prompt, #msg, input {
-      text-shadow: 0 0 1.5px #00FF00, 0 0 10px #00FF00;
+      text-shadow: 0 0 2px var(--accent), 0 0 12px var(--accent);
     }
     
+    /* Custom cursor element */
+    #custom-cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      mix-blend-mode: difference;
+      display: none;
+    }
+
     /* HIDE ALL SCROLLBARS */
     ::-webkit-scrollbar {
       display: none;
@@ -105,11 +167,14 @@
     </div>
   </div>
 
+  <!-- Custom cursor -->
+  <div id="custom-cursor"></div>
+
   <script src="script.js"></script>
   
   <script>
-    // SIMPLE ZOOM SYSTEM - ADJUSTED BASE SIZE
-    let fontSize = 1.1;
+    // SIMPLE ZOOM SYSTEM - MATCH LOREM DEFAULTS
+    let fontSize = 1.0;
     
     function zoomIn() {
       fontSize = Math.min(fontSize + 0.15, 2.5);
@@ -140,7 +205,7 @@
       });
     }
     
-    // Keyboard controls
+    // Keyboard controls - match lorem.html functionality
     document.addEventListener('keydown', function(e) {
       if (e.key === '+' || e.key === '=') {
         e.preventDefault();
@@ -151,8 +216,84 @@
       } else if (e.key === '0') {
         e.preventDefault();
         resetZoom();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === '1' || e.key === '2' || e.key === '3') {
+        e.preventDefault();
+        setColorScheme(parseInt(e.key) - 1);
+      } else if (e.key === 'z' || e.key === 'Z') {
+        e.preventDefault();
+        toggleGlow('full');
+      } else if (e.key === 'x' || e.key === 'X') {
+        e.preventDefault();
+        toggleGlow('half');
+      } else if (e.key === 'c' || e.key === 'C') {
+        e.preventDefault();
+        toggleGlow('off');
       }
     });
+    
+    // Fullscreen functionality
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    
+    // Color scheme functionality - match lorem.html
+    let colorIndex = 2; // Default to soft green (option 3)
+    const colors = ['#CCCCCC', '#00FF00', '#66FF66'];
+    
+    function setColorScheme(index) {
+      colorIndex = index;
+      applyColors();
+    }
+    
+    function applyColors() {
+      const color = colors[colorIndex];
+      // Update CSS custom properties
+      document.documentElement.style.setProperty('--accent', color);
+      document.documentElement.style.setProperty('--soft', color);
+      
+      const elements = document.querySelectorAll('#boot, #prompt, #msg, input');
+      elements.forEach(el => {
+        if (el) {
+          el.style.color = color;
+          if (glowMode === 'full') {
+            el.style.textShadow = `0 0 2px ${color}, 0 0 12px ${color}`;
+          } else if (glowMode === 'half') {
+            el.style.textShadow = `0 0 1px ${color}, 0 0 6px ${color}`;
+          } else {
+            el.style.textShadow = 'none';
+          }
+        }
+      });
+    }
+    
+    // Glow toggle functionality  
+    let glowMode = 'full';
+    
+    function toggleGlow(mode) {
+      glowMode = mode;
+      const color = colors[colorIndex];
+      const elements = document.querySelectorAll('#boot, #prompt, #msg, input');
+      
+      elements.forEach(el => {
+        if (!el) return;
+        if (mode === 'full') {
+          el.style.textShadow = `0 0 2px ${color}, 0 0 12px ${color}`;
+        } else if (mode === 'half') {
+          el.style.textShadow = `0 0 1px ${color}, 0 0 6px ${color}`;
+        } else if (mode === 'off') {
+          el.style.textShadow = 'none';
+        }
+      });
+    }
     
     // ADDITIONAL SCROLL PREVENTION
     function preventScroll(e) {
@@ -166,8 +307,24 @@
     document.addEventListener('touchmove', preventScroll, { passive: false });
     document.addEventListener('scroll', preventScroll, { passive: false });
     
-    console.log('Fixed container scroll prevention active!');
-    console.log('Press + to zoom in, - to zoom out, 0 to reset');
+    console.log('Terminal interface initialized');
+    console.log('Controls: +/- zoom, 0 reset, F fullscreen, 1/2/3 colors, Z/X/C glow');
+    
+    // Custom cursor functionality
+    const customCursor = document.getElementById('custom-cursor');
+    
+    document.addEventListener('mousemove', (e) => {
+      customCursor.style.left = e.clientX + 'px';
+      customCursor.style.top = e.clientY + 'px';
+      customCursor.style.display = 'block';
+    });
+    
+    document.addEventListener('mouseleave', () => {
+      customCursor.style.display = 'none';
+    });
+    
+    // Initialize color scheme
+    applyColors();
   </script>
 </body>
 </html>
