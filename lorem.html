@@ -151,13 +151,15 @@
       display: block;
     }
     
-    #page img.show-below {
-      display: block;
-      margin-top: 1rem;
-      max-height: 40%;
-      max-width: 100%;
-      object-fit: contain;
-    }
+         #page img.show-below {
+       display: block;
+       margin-top: 1rem;
+       max-height: 40%;
+       max-width: 100%;
+       object-fit: contain;
+       position: relative;
+       top: -12rem;
+     }
     
                              #page img.show-side {
         display: block;
@@ -209,18 +211,32 @@
        box-sizing: border-box;
        overflow: hidden;
      }
-    #unscramble { 
-      white-space: pre-wrap; 
-      font-size: 1.4rem;
-      line-height: 1.8;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      height: 100%;
-      overflow: hidden;
-      width: 100%;
-      box-sizing: border-box;
-      max-width: 100%;
-    }
+         #unscramble { 
+       white-space: pre-wrap; 
+       font-size: 1.4rem;
+       line-height: 1.8;
+       word-wrap: break-word;
+       overflow-wrap: break-word;
+       height: 100%;
+       overflow: hidden;
+       width: 100%;
+       box-sizing: border-box;
+       max-width: 100%;
+       /* Preserve indentation for wrapped lines */
+       text-indent: 0;
+       hanging-punctuation: first;
+     }
+     
+     /* Handle indented line wrapping - preserve indentation for continuation lines */
+     #unscramble .indented-line {
+       display: block;
+       text-indent: 2em; /* Standard indentation */
+     }
+     
+     #unscramble .continuation {
+       display: block;
+       text-indent: 2em; /* Same indentation as parent */
+     }
     #prompt { 
       margin-top:1rem; 
       visibility:hidden; 
@@ -298,14 +314,20 @@
          z-index: 2 !important;
        }
     
-    #text-wrap.side-mode #unscramble {
-      width: 100% !important;
-      max-width: 100% !important;
-      overflow: visible !important;
-      white-space: pre-wrap !important;
-      word-wrap: break-word !important;
-      overflow-wrap: break-word !important;
-    }
+         #text-wrap.side-mode #unscramble {
+       width: 100% !important;
+       max-width: 100% !important;
+       overflow: visible !important;
+       white-space: pre-wrap !important;
+       word-wrap: break-word !important;
+       overflow-wrap: break-word !important;
+     }
+     
+     /* Special rule: make slide 11 text slightly smaller to prevent navbar overlap */
+     #page[data-page="11"] #unscramble {
+       font-size: 1.2rem !important;
+       line-height: 1.6 !important;
+     }
   </style>
 </head>
 <body>
@@ -434,8 +456,7 @@ With the stroke of a pen and a $6 billion IMF deal, his asylum ended. What follo
 
         > incarceration, 
         > isolation, 
-        > and eventual release 
-        through a plea deal under the Espionage Act 
+        > and eventual release through a plea deal under the Espionage Act 
 
 a historic first for a publisher.
 
@@ -506,10 +527,7 @@ Help us break it.
 
 What We're Asking:
 
-> Initial crypto contribution to fund 
-		distribution, 
-		promotion and an 
-		impact campaign.
+> Initial crypto contribution to fund distribution, promotion and an impact campaign.
 
 > Public endorsement (if desired) to galvanise the broader crypto sphere.
 
@@ -520,8 +538,7 @@ What We're Asking:
 
 Use of Funds:
 
-> Academy screenings and crypto-native distribution 
-        (NFT access passes, decentralised streaming)
+> Academy screenings and crypto-native distribution (NFT access passes, decentralised streaming)
 
 > Legal and security support for contributors in high-risk zones
 
@@ -907,41 +924,30 @@ Contact:
       img.src = `photos/photo${pageNumber}.${formats[formatIndex]}`;
     }
 
-         /* ================== TEXT TRUNCATION ================== */
-     function truncateTextToFit(element, text) {
-       element.textContent = text;
-       
-       // Get the text container to check available space
-       const textWrap = document.getElementById('text-wrap');
-       const availableHeight = textWrap ? textWrap.clientHeight : element.clientHeight;
-       
-       // Force text to fit by reducing font size if needed
-       if (element.scrollHeight > availableHeight) {
-         let fontSize = parseFloat(getComputedStyle(element).fontSize);
-         
-         // Keep reducing font size until text fits
-         while (element.scrollHeight > availableHeight && fontSize > 0.6) {
-           fontSize -= 0.1;
-           element.style.fontSize = fontSize + 'rem';
-         }
-         
-         // If still doesn't fit, truncate lines
-         if (element.scrollHeight > availableHeight) {
-           const lines = text.split('\n');
-           const lineHeight = parseFloat(getComputedStyle(element).lineHeight);
-           const maxLines = Math.floor(availableHeight / lineHeight);
-           
-           let truncatedLines = lines.slice(0, Math.max(1, maxLines - 1));
-           if (truncatedLines.length < lines.length) {
-             if (truncatedLines.length > 0) {
-               truncatedLines[truncatedLines.length - 1] += '...';
-             }
-           }
-           
-           element.textContent = truncatedLines.join('\n');
-         }
-       }
-     }
+              /* ================== TEXT TRUNCATION ================== */
+      function truncateTextToFit(element, text) {
+        element.textContent = text;
+        
+        // Get the text container to check available space
+        const textWrap = document.getElementById('text-wrap');
+        const availableHeight = textWrap ? textWrap.clientHeight : element.clientHeight;
+        
+        // Only reduce font size if absolutely necessary, and be more conservative
+        if (element.scrollHeight > availableHeight) {
+          let fontSize = parseFloat(getComputedStyle(element).fontSize);
+          
+          // Reduce font size more conservatively
+          while (element.scrollHeight > availableHeight && fontSize > 1.2) {
+            fontSize -= 0.05;
+            element.style.fontSize = fontSize + 'rem';
+          }
+          
+          // If still doesn't fit, add some padding to prevent navbar overlap
+          if (element.scrollHeight > availableHeight) {
+            element.style.paddingBottom = '2rem';
+          }
+        }
+      }
 
     /* ================== SCRAMBLE ================== */
     function scrambleFastChunks(element, text, onComplete) {
@@ -976,13 +982,16 @@ Contact:
     }
 
     /* ================== PAGE RENDER ================== */
-    function startPage(pageIndex){
-      if (pageIndex >= pages.length) pageIndex = 0;
-      if (pageIndex < 0) pageIndex = pages.length - 1;
-      currentPage = pageIndex;
-      
-      pageCounterEl.textContent = pageIndex + 1;
-      navMsg.style.visibility = 'hidden';
+         function startPage(pageIndex){
+       if (pageIndex >= pages.length) pageIndex = 0;
+       if (pageIndex < 0) pageIndex = pages.length - 1;
+       currentPage = pageIndex;
+       
+       pageCounterEl.textContent = pageIndex + 1;
+       navMsg.style.visibility = 'hidden';
+       
+       // Set data-page attribute for CSS targeting
+       pageEl.setAttribute('data-page', pageIndex + 1);
       
       // Show text for all pages except the last one
       if (pageIndex < pages.length - 1) {
