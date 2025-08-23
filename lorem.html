@@ -45,11 +45,11 @@
       width: 100vw;
       height: 100vh;
       background: repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 2px,
-        rgba(0, 255, 0, 0.03) 2px,
-        rgba(0, 255, 0, 0.03) 4px
+0deg,
+transparent 0px,
+transparent 2px,
+rgba(0, 255, 0, 0.03) 2px,
+rgba(0, 255, 0, 0.03) 4px
       );
       pointer-events: none;
       z-index: 99998;
@@ -64,11 +64,11 @@
       width: 100vw;
       height: 100vh;
       background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.20) 0px,
-        rgba(0, 0, 0, 0.20) 2px,
-        transparent 2px,
-        transparent 4px
+0deg,
+rgba(0, 0, 0, 0.20) 0px,
+rgba(0, 0, 0, 0.20) 2px,
+transparent 2px,
+transparent 4px
       );
       pointer-events: none;
       z-index: 99999;
@@ -76,38 +76,38 @@
     
     @media (max-width: 768px) {
       body {
-        padding: 4vw;
-        margin: 3vh auto;
-        font-size: 1rem;
+padding: 4vw;
+margin: 3vh auto;
+font-size: 1rem;
       }
       #page {
-        padding: 2vw;
+padding: 2vw;
       }
       #unscramble {
-        font-size: 1.2rem;
-        line-height: 1.6;
+font-size: 1.2rem;
+line-height: 1.6;
       }
       #nav {
-        font-size: 2rem;
-        margin: 2vh 0 1vh;
+font-size: 2rem;
+margin: 2vh 0 1vh;
       }
       #nav-msg {
-        font-size: 1rem;
+font-size: 1rem;
       }
       #hud {
-        font-size: 1rem;
-        flex-direction: column;
-        gap: 0.5rem;
+font-size: 1rem;
+flex-direction: column;
+gap: 0.5rem;
       }
       #page-counter {
-        bottom: 1vh;
-        right: 2vw;
+bottom: 1vh;
+right: 2vw;
       }
     }
     
     @media screen and (min-resolution: 1dppx) {
       body {
-        font-size: 1.2rem;
+font-size: 1.2rem;
       }
     }
     #page {
@@ -122,7 +122,7 @@
       overflow: visible; /* Allow text to be visible */
     }
     
-         /* Simple image display */
+ /* Simple image display */
      #page img {
        display: none;
        filter: brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5); /* Default: full green overlay - original brightness */
@@ -130,14 +130,14 @@
        image-rendering: auto;
      }
      
-           /* Special rule: dim only photo7 */
+   /* Special rule: dim only photo7 */
       #page img[id="img-7"] {
-        filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo7 dimmed as requested */
+filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo7 dimmed as requested */
       }
       
       /* Special rule: dim only photo23 */
       #page img[id="img-23"] {
-        filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo23 dimmed as requested */
+filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo23 dimmed as requested */
       }
     
     #page img.show-bg {
@@ -151,7 +151,7 @@
       display: block;
     }
     
-         #page img.show-below {
+ #page img.show-below {
        display: block;
        margin-top: 1rem;
        max-height: 40%;
@@ -162,26 +162,26 @@
        z-index: -1;
      }
     
-                             #page img.show-side {
-        display: block;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 50%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
+     #page img.show-side {
+display: block;
+position: absolute;
+right: 0;
+top: 0;
+width: 50%;
+height: 100%;
+object-fit: cover;
+z-index: 1;
       }
       
-             #page img.show-small-side {
-         display: block;
-         position: absolute;
-         right: 0;
-         top: 0;
-         width: 25%;
-         height: 60%;
-         object-fit: cover;
-         z-index: 1;
+     #page img.show-small-side {
+ display: block;
+ position: absolute;
+ right: 0;
+ top: 0;
+ width: 25%;
+ height: 60%;
+ object-fit: cover;
+ z-index: 1;
        }
     
     /* Text container width is now controlled by JavaScript */
@@ -204,7 +204,7 @@
       display: none;
     }
     
-         #text-wrap { 
+ #text-wrap { 
        min-width:0; 
        margin-top: -1.4rem; 
        width: 100%;
@@ -212,7 +212,7 @@
        box-sizing: border-box;
        overflow: hidden;
      }
-                  #unscramble { 
+  #unscramble { 
       white-space: pre-wrap; 
       font-size: 1.4rem;
       line-height: 1.8;
@@ -300,23 +300,23 @@
       z-index: 1000;
     }
     
-                   /* Side mode: text on left, image on right */
+   /* Side mode: text on left, image on right */
       #text-wrap.side-mode {
-        width: 50% !important;
-        max-width: 50% !important;
-        position: relative !important;
-        z-index: 2 !important;
+width: 50% !important;
+max-width: 50% !important;
+position: relative !important;
+z-index: 2 !important;
       }
       
-             /* Small side mode: text on left, smaller image on right */
+     /* Small side mode: text on left, smaller image on right */
        #text-wrap.small-side-mode {
-         width: 75% !important;
-         max-width: 75% !important;
-         position: relative !important;
-         z-index: 2 !important;
+ width: 75% !important;
+ max-width: 75% !important;
+ position: relative !important;
+ z-index: 2 !important;
        }
     
-                  #text-wrap.side-mode #unscramble {
+  #text-wrap.side-mode #unscramble {
       width: 100% !important;
       max-width: 100% !important;
       overflow: hidden !important;
@@ -364,7 +364,7 @@
   </div>
 
   <div id="hud">
-         <span class="controls">[1/2/3] color • [↑/↓] image mode • [B] background • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [B] background • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -435,7 +435,7 @@ Much of what has passed for "truth" in the mainstream narrative was shaped throu
 
 WikiLeaks, once a global lightning rod, has been buried beneath the churn of 24/7 news and state-sanctioned amnesia. But the mechanisms Assange exposed 
 
-  > surveillance, secrecy, impunity 
+> surveillance, secrecy, impunity 
 
 haven't vanished. 
 
@@ -501,7 +501,7 @@ Assange turned to cryptocurrency
 
 
 "Bitcoin is the real Occupy Wall Street," 
-                      -Julian Assange
+      -Julian Assange
 
 
 
@@ -516,7 +516,7 @@ The Cypherpunk roots of Bitcoin and WikiLeaks are the same:
 
 
 
-        
+
 
 
 The crypto world has already spoken. This film gives that voice a platform.
@@ -554,7 +554,7 @@ What We're Asking:
 > Public endorsement (if desired) to galvanise the broader crypto sphere.
 
 > Strategic guidance to Bitcoin-aligned distribution tools.
-		
+
 
 
 
@@ -636,7 +636,7 @@ Contact:
     const pages = fullText.split(/\n{4,}/);
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,\'"?!-—:;\n';
 
-         // Image modes
+ // Image modes
      const IMG_OFF = 0;
      const IMG_BG = 1;
      const IMG_BELOW = 2;
@@ -660,7 +660,7 @@ Contact:
       const pageNumber = pageIndex + 1;
       const imgEl = document.getElementById(`img-${pageNumber}`);
       if (imgEl) {
-        imgEl.setAttribute('data-user-set', 'true');
+imgEl.setAttribute('data-user-set', 'true');
       }
       // Save to localStorage for persistence across refreshes
       savePageModeToStorage(pageIndex, pageModes[pageIndex]);
@@ -668,41 +668,41 @@ Contact:
     
     function savePageModeToStorage(pageIndex, mode) {
       try {
-        const storedModes = JSON.parse(localStorage.getItem('pitchDeckImageModes') || '{}');
-        storedModes[pageIndex] = mode;
-        localStorage.setItem('pitchDeckImageModes', JSON.stringify(storedModes));
+const storedModes = JSON.parse(localStorage.getItem('pitchDeckImageModes') || '{}');
+storedModes[pageIndex] = mode;
+localStorage.setItem('pitchDeckImageModes', JSON.stringify(storedModes));
       } catch (e) {
-        console.warn('Could not save image mode to localStorage:', e);
+console.warn('Could not save image mode to localStorage:', e);
       }
     }
     
     function loadPageModesFromStorage() {
       try {
-        const storedModes = JSON.parse(localStorage.getItem('pitchDeckImageModes') || '{}');
-        Object.keys(storedModes).forEach(pageIndex => {
-          const index = parseInt(pageIndex);
-          if (index >= 0 && index < pageModes.length) {
-            pageModes[index] = storedModes[pageIndex];
-            // Mark as user-set so auto-detection doesn't override
-            setTimeout(() => {
-              const imgEl = document.getElementById(`img-${index + 1}`);
-              if (imgEl) {
-                imgEl.setAttribute('data-user-set', 'true');
-              }
-            }, 100);
-          }
-        });
+const storedModes = JSON.parse(localStorage.getItem('pitchDeckImageModes') || '{}');
+Object.keys(storedModes).forEach(pageIndex => {
+  const index = parseInt(pageIndex);
+  if (index >= 0 && index < pageModes.length) {
+    pageModes[index] = storedModes[pageIndex];
+    // Mark as user-set so auto-detection doesn't override
+    setTimeout(() => {
+      const imgEl = document.getElementById(`img-${index + 1}`);
+      if (imgEl) {
+imgEl.setAttribute('data-user-set', 'true');
+      }
+    }, 100);
+  }
+});
       } catch (e) {
-        console.warn('Could not load image modes from localStorage:', e);
+console.warn('Could not load image modes from localStorage:', e);
       }
     }
     
-         const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
+ const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
     
     // Load saved image modes from localStorage
     loadPageModesFromStorage();
     
-                    // All pages start with IMG_OFF and auto-detect images
+    // All pages start with IMG_OFF and auto-detect images
      
      // Auto-detect pages with images and set them to side mode
      // This will be handled dynamically when images are found
@@ -723,19 +723,19 @@ Contact:
     function showImage(pageIndex) {
       // Hide all existing images first
       document.querySelectorAll('#page img').forEach(img => {
-        img.className = '';
+img.className = '';
       });
       
       // Hide video if it exists
       const videoEl = document.getElementById('final-video');
       if (videoEl) {
-        videoEl.style.display = 'none';
+videoEl.style.display = 'none';
       }
       
       // Check if this is the final video page
       if (pageIndex === pages.length - 1) {
-        showFinalVideo();
-        return;
+showFinalVideo();
+return;
       }
       
       const pageNumber = pageIndex + 1;
@@ -743,28 +743,28 @@ Contact:
       
       // If no image exists for this page yet, try to create one
       if (!imgEl) {
-        imgEl = createImageForPage(pageNumber);
+imgEl = createImageForPage(pageNumber);
       }
       
-             // Show image if it exists - auto-set mode if needed
+     // Show image if it exists - auto-set mode if needed
        if (imgEl) {
-         // Only auto-set to SIDE mode if this is the first time and user hasn't manually set a mode
-         if (pageModes[pageIndex] === IMG_OFF && !imgEl.hasAttribute('data-user-set')) {
-           pageModes[pageIndex] = IMG_SIDE;
-         }
-         
-         const mode = pageModes[pageIndex];
-         if (mode === IMG_BG) imgEl.className = 'show-bg';
-         else if (mode === IMG_BELOW) imgEl.className = 'show-below';
-         else if (mode === IMG_SIDE) imgEl.className = 'show-side';
-         else if (mode === IMG_SMALL_SIDE) imgEl.className = 'show-small-side';
+ // Only auto-set to SIDE mode if this is the first time and user hasn't manually set a mode
+ if (pageModes[pageIndex] === IMG_OFF && !imgEl.hasAttribute('data-user-set')) {
+   pageModes[pageIndex] = IMG_SIDE;
+ }
+ 
+ const mode = pageModes[pageIndex];
+ if (mode === IMG_BG) imgEl.className = 'show-bg';
+ else if (mode === IMG_BELOW) imgEl.className = 'show-below';
+ else if (mode === IMG_SIDE) imgEl.className = 'show-side';
+ else if (mode === IMG_SMALL_SIDE) imgEl.className = 'show-small-side';
        }
       
       // Only adjust text if there's actually an image showing
       if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
-        adjustTextContainerWidth(pageModes[pageIndex]);
+adjustTextContainerWidth(pageModes[pageIndex]);
       } else {
-        adjustTextContainerWidth(IMG_OFF);
+adjustTextContainerWidth(IMG_OFF);
       }
     }
     
@@ -786,28 +786,28 @@ Contact:
       
       // Only show image when it loads successfully
       img.addEventListener('load', () => {
-        console.log(`Image loaded successfully for page ${pageNumber}`);
-        img.style.opacity = '1';
-        
-        // Update page mode and layout if this is the current page
-        const pageIndex = pageNumber - 1;
-        if (pageIndex === currentPage) {
-          // Only auto-set to SIDE mode on first load, don't override user choices
-          if (pageModes[pageIndex] === IMG_OFF && !img.hasAttribute('data-user-set')) {
-            pageModes[pageIndex] = IMG_SIDE;
-          }
-          adjustTextContainerWidth(pageModes[pageIndex]);
-        }
-        
-        // Apply current overlay mode to new image
-        applyOverlayToImage(img, currentOverlayMode);
+console.log(`Image loaded successfully for page ${pageNumber}`);
+img.style.opacity = '1';
+
+// Update page mode and layout if this is the current page
+const pageIndex = pageNumber - 1;
+if (pageIndex === currentPage) {
+  // Only auto-set to SIDE mode on first load, don't override user choices
+  if (pageModes[pageIndex] === IMG_OFF && !img.hasAttribute('data-user-set')) {
+    pageModes[pageIndex] = IMG_SIDE;
+  }
+  adjustTextContainerWidth(pageModes[pageIndex]);
+}
+
+// Apply current overlay mode to new image
+applyOverlayToImage(img, currentOverlayMode);
       });
       
       // Handle image loading errors gracefully
       img.addEventListener('error', () => {
-        console.log(`Failed to load image for page ${pageNumber}`);
-        img.style.display = 'none';
-        // Don't remove the image element - just hide it
+console.log(`Failed to load image for page ${pageNumber}`);
+img.style.display = 'none';
+// Don't remove the image element - just hide it
       });
       
       return img;
@@ -828,31 +828,31 @@ Contact:
       const textWrap = document.getElementById('text-wrap');
       if (!textWrap) return;
       
-                           if (imageMode === IMG_SIDE) {
-          // Side mode: text on left, image on right
-          textWrap.style.setProperty('width', '50%', 'important');
-          textWrap.style.setProperty('max-width', '50%', 'important');
-          textWrap.style.setProperty('position', 'relative', 'important');
-          textWrap.style.setProperty('z-index', '2', 'important');
-          textWrap.classList.add('side-mode');
-          textWrap.classList.remove('small-side-mode');
-                 } else if (imageMode === IMG_SMALL_SIDE) {
-           // Small side mode: text on left, smaller image on right
-           textWrap.style.setProperty('width', '75%', 'important');
-           textWrap.style.setProperty('max-width', '75%', 'important');
-           textWrap.style.setProperty('position', 'relative', 'important');
-           textWrap.style.setProperty('z-index', '2', 'important');
-           textWrap.classList.add('small-side-mode');
-           textWrap.classList.remove('side-mode');
-         } else {
-          // All other modes: text uses full width
-          textWrap.style.setProperty('width', '100%', 'important');
-          textWrap.style.setProperty('max-width', '100%', 'important');
-          textWrap.style.setProperty('position', '', 'important');
-          textWrap.style.setProperty('z-index', '', 'important');
-          textWrap.classList.remove('side-mode');
-          textWrap.classList.remove('small-side-mode');
-        }
+   if (imageMode === IMG_SIDE) {
+  // Side mode: text on left, image on right
+  textWrap.style.setProperty('width', '50%', 'important');
+  textWrap.style.setProperty('max-width', '50%', 'important');
+  textWrap.style.setProperty('position', 'relative', 'important');
+  textWrap.style.setProperty('z-index', '2', 'important');
+  textWrap.classList.add('side-mode');
+  textWrap.classList.remove('small-side-mode');
+ } else if (imageMode === IMG_SMALL_SIDE) {
+   // Small side mode: text on left, smaller image on right
+   textWrap.style.setProperty('width', '75%', 'important');
+   textWrap.style.setProperty('max-width', '75%', 'important');
+   textWrap.style.setProperty('position', 'relative', 'important');
+   textWrap.style.setProperty('z-index', '2', 'important');
+   textWrap.classList.add('small-side-mode');
+   textWrap.classList.remove('side-mode');
+ } else {
+  // All other modes: text uses full width
+  textWrap.style.setProperty('width', '100%', 'important');
+  textWrap.style.setProperty('max-width', '100%', 'important');
+  textWrap.style.setProperty('position', '', 'important');
+  textWrap.style.setProperty('z-index', '', 'important');
+  textWrap.classList.remove('side-mode');
+  textWrap.classList.remove('small-side-mode');
+}
     }
     
     // Show final video with loading bar
@@ -860,40 +860,40 @@ Contact:
       // Hide text
       const textWrap = document.getElementById('text-wrap');
       if (textWrap) {
-        textWrap.style.display = 'none';
+textWrap.style.display = 'none';
       }
       
       // Create video element if it doesn't exist
       let videoEl = document.getElementById('final-video');
       if (!videoEl) {
-        videoEl = document.createElement('video');
-        videoEl.id = 'final-video';
-        videoEl.controls = true;
-        videoEl.autoplay = false;
-        videoEl.muted = false;
-        videoEl.style.cssText = `
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          max-width: 90%;
-          max-height: 90%;
-          z-index: 10;
-          display: none;
-        `;
-        videoEl.src = 'video.mp4';
-        document.getElementById('page').appendChild(videoEl);
-        
-        // Apply current overlay mode to video
-        applyOverlayToVideo(videoEl, currentOverlayMode);
+videoEl = document.createElement('video');
+videoEl.id = 'final-video';
+videoEl.controls = true;
+videoEl.autoplay = false;
+videoEl.muted = false;
+videoEl.style.cssText = `
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  max-height: 90%;
+  z-index: 10;
+  display: none;
+`;
+videoEl.src = 'video.mp4';
+document.getElementById('page').appendChild(videoEl);
+
+// Apply current overlay mode to video
+applyOverlayToVideo(videoEl, currentOverlayMode);
       }
       
       // Show loading bar first
       showLoadingBar(() => {
-        // Hide loading bar and show video
-        hideLoadingBar();
-        videoEl.style.display = 'block';
-        videoEl.play();
+// Hide loading bar and show video
+hideLoadingBar();
+videoEl.style.display = 'block';
+videoEl.play();
       });
     }
     
@@ -905,34 +905,34 @@ Contact:
       const loadingContainer = document.createElement('div');
       loadingContainer.id = 'loading-container';
       loadingContainer.style.cssText = `
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        z-index: 20;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+text-align: center;
+z-index: 20;
       `;
       
       const progressBar = document.createElement('div');
       progressBar.id = 'progress-bar';
       progressBar.style.cssText = `
-        width: 300px;
-        height: 20px;
-        border: 2px solid ${currentColor};
-        background: var(--bg);
-        margin: 0 auto;
-        position: relative;
-        overflow: hidden;
+width: 300px;
+height: 20px;
+border: 2px solid ${currentColor};
+background: var(--bg);
+margin: 0 auto;
+position: relative;
+overflow: hidden;
       `;
       
       const progressFill = document.createElement('div');
       progressFill.id = 'progress-fill';
       progressFill.style.cssText = `
-        height: 100%;
-        background: ${currentColor};
-        width: 0%;
-        transition: width 0.1s ease;
-        box-shadow: 0 0 10px ${currentColor};
+height: 100%;
+background: ${currentColor};
+width: 0%;
+transition: width 0.1s ease;
+box-shadow: 0 0 10px ${currentColor};
       `;
       
       progressBar.appendChild(progressFill);
@@ -943,15 +943,15 @@ Contact:
       let progress = 0;
       
       const interval = setInterval(() => {
-        progress += Math.random() * 15 + 5; // Random progress increments
-        if (progress > 100) progress = 100;
-        
-        progressFill.style.width = progress + '%';
-        
-        if (progress >= 100) {
-          clearInterval(interval);
-          setTimeout(onComplete, 500);
-        }
+progress += Math.random() * 15 + 5; // Random progress increments
+if (progress > 100) progress = 100;
+
+progressFill.style.width = progress + '%';
+
+if (progress >= 100) {
+  clearInterval(interval);
+  setTimeout(onComplete, 500);
+}
       }, 100);
     }
     
@@ -959,7 +959,7 @@ Contact:
     function hideLoadingBar() {
       const loadingContainer = document.getElementById('loading-container');
       if (loadingContainer) {
-        loadingContainer.remove();
+loadingContainer.remove();
       }
     }
     
@@ -967,17 +967,17 @@ Contact:
     function tryImageFormats(img, pageNumber, formatIndex) {
       // Start with most compatible formats, then try everything else
       const formats = [
-        'jpg', 'jpeg', 'png', 'gif',  // Universal support
-        'webp', 'svg',                // Modern browsers
-        'bmp', 'tiff', 'tif',         // Desktop browsers
-        'avif', 'jfif', 'pjpeg'       // Newer formats
+'jpg', 'jpeg', 'png', 'gif',  // Universal support
+'webp', 'svg',// Modern browsers
+'bmp', 'tiff', 'tif', // Desktop browsers
+'avif', 'jfif', 'pjpeg'       // Newer formats
       ];
       
       if (formatIndex >= formats.length) {
-        // All formats failed, remove the image
-        console.log(`No image found for page ${pageNumber}`);
-        img.remove();
-        return;
+// All formats failed, remove the image
+console.log(`No image found for page ${pageNumber}`);
+img.remove();
+return;
       }
       
       const format = formats[formatIndex];
@@ -986,47 +986,47 @@ Contact:
       // Test if this format file exists by creating a test image
       const testImg = new Image();
       testImg.onload = function() {
-        // File exists and format is supported - use it!
-        console.log(`✅ Found working image: ${testSrc}`);
-        img.src = testSrc;
+// File exists and format is supported - use it!
+console.log(`✅ Found working image: ${testSrc}`);
+img.src = testSrc;
       };
       testImg.onerror = function() {
-        // This format/file doesn't work, try next
-        tryImageFormats(img, pageNumber, formatIndex + 1);
+// This format/file doesn't work, try next
+tryImageFormats(img, pageNumber, formatIndex + 1);
       };
       testImg.src = testSrc;
     }
 
-              /* ================== TEXT TRUNCATION ================== */
+      /* ================== TEXT TRUNCATION ================== */
       function truncateTextToFit(element, text) {
-        element.textContent = text;
-        
-        // Get the text container to check available space
-        const textWrap = document.getElementById('text-wrap');
-        const availableHeight = textWrap ? textWrap.clientHeight : element.clientHeight;
-        
-        // Only reduce font size if absolutely necessary, and be more conservative
-        if (element.scrollHeight > availableHeight) {
-          let fontSize = parseFloat(getComputedStyle(element).fontSize);
-          
-          // Reduce font size more conservatively
-          while (element.scrollHeight > availableHeight && fontSize > 1.2) {
-            fontSize -= 0.05;
-            element.style.fontSize = fontSize + 'rem';
-          }
-          
-          // If still doesn't fit, add some padding to prevent navbar overlap
-          if (element.scrollHeight > availableHeight) {
-            element.style.paddingBottom = '2rem';
-          }
-        }
+element.textContent = text;
+
+// Get the text container to check available space
+const textWrap = document.getElementById('text-wrap');
+const availableHeight = textWrap ? textWrap.clientHeight : element.clientHeight;
+
+// Only reduce font size if absolutely necessary, and be more conservative
+if (element.scrollHeight > availableHeight) {
+  let fontSize = parseFloat(getComputedStyle(element).fontSize);
+  
+  // Reduce font size more conservatively
+  while (element.scrollHeight > availableHeight && fontSize > 1.2) {
+    fontSize -= 0.05;
+    element.style.fontSize = fontSize + 'rem';
+  }
+  
+  // If still doesn't fit, add some padding to prevent navbar overlap
+  if (element.scrollHeight > availableHeight) {
+    element.style.paddingBottom = '2rem';
+  }
+}
       }
 
     /* ================== SCRAMBLE ================== */
     function scrambleFastChunks(element, text, onComplete) {
       if (currentInterval) {
-        clearInterval(currentInterval);
-        currentInterval = null;
+clearInterval(currentInterval);
+currentInterval = null;
       }
       
       let index = 0, chunkSize = 15, scrambled = text.split(''), len = text.length;
@@ -1034,28 +1034,28 @@ Contact:
       isAnimating = true; promptElem.style.visibility='hidden'; navMsg.style.visibility='hidden';
 
       currentInterval = setInterval(() => {
-        const display = scrambled.slice();
-        for (let i=0;i<index;i++){
-          let s=i*chunkSize, e=Math.min(s+chunkSize,len);
-          for (let j=s;j<e;j++) display[j]=text[j];
-        }
-        for (let k=index*chunkSize;k<len;k++) display[k] = /\s/.test(text[k]) ? text[k] : chars[Math.floor(Math.random()*chars.length)];
-        element.textContent = display.join('');
-        index++;
-        if ((index*chunkSize)>=len){
-          clearInterval(currentInterval);
-          currentInterval = null;
-          truncateTextToFit(element, text);
-          isAnimating=false;
-          navMsg.textContent='PRESS SPACEBAR TO CONTINUE';
-          navMsg.style.visibility='visible';
-          onComplete && onComplete();
-        }
+const display = scrambled.slice();
+for (let i=0;i<index;i++){
+  let s=i*chunkSize, e=Math.min(s+chunkSize,len);
+  for (let j=s;j<e;j++) display[j]=text[j];
+}
+for (let k=index*chunkSize;k<len;k++) display[k] = /\s/.test(text[k]) ? text[k] : chars[Math.floor(Math.random()*chars.length)];
+element.textContent = display.join('');
+index++;
+if ((index*chunkSize)>=len){
+  clearInterval(currentInterval);
+  currentInterval = null;
+  truncateTextToFit(element, text);
+  isAnimating=false;
+  navMsg.textContent='PRESS SPACEBAR TO CONTINUE';
+  navMsg.style.visibility='visible';
+  onComplete && onComplete();
+}
       },80);
     }
 
     /* ================== PAGE RENDER ================== */
-         function startPage(pageIndex){
+ function startPage(pageIndex){
        if (pageIndex >= pages.length) pageIndex = 0;
        if (pageIndex < 0) pageIndex = pages.length - 1;
        currentPage = pageIndex;
@@ -1068,16 +1068,16 @@ Contact:
       
       // Show text for all pages except the last one
       if (pageIndex < pages.length - 1) {
-        const textWrap = document.getElementById('text-wrap');
-        if (textWrap) {
-          textWrap.style.display = 'block';
-        }
-        
-        el.textContent='';
-        isAnimating = false;
-        scrambleFastChunks(el, pages[pageIndex], () => {
-          // Text displayed
-        });
+const textWrap = document.getElementById('text-wrap');
+if (textWrap) {
+  textWrap.style.display = 'block';
+}
+
+el.textContent='';
+isAnimating = false;
+scrambleFastChunks(el, pages[pageIndex], () => {
+  // Text displayed
+});
       }
       
       showImage(pageIndex);
@@ -1095,14 +1095,14 @@ Contact:
     document.getElementById('nav-next').addEventListener('touchstart', safeAdvance, {passive:true});
     document.getElementById('nav-prev').addEventListener('click', goBack);
     document.getElementById('nav-next').addEventListener('click', safeAdvance);
-         document.addEventListener('pointerdown', (e)=>{ 
+ document.addEventListener('pointerdown', (e)=>{ 
        if (e.target.id==='nav-prev'||e.target.id==='nav-next') return; 
        
        // Left half of screen goes back, right half goes forward
        if (e.clientX < window.innerWidth / 2) {
-         goBack();
+ goBack();
        } else {
-         safeAdvance();
+ safeAdvance();
        }
      }, {passive:true});
      
@@ -1111,19 +1111,19 @@ Contact:
        
        // Left half of screen goes back, right half goes forward
        if (e.touches[0].clientX < window.innerWidth / 2) {
-         goBack();
+ goBack();
        } else {
-         safeAdvance();
+ safeAdvance();
        }
      }, {passive:true});
-         document.addEventListener('click', (e)=>{ 
+ document.addEventListener('click', (e)=>{ 
        if (e.target.id==='nav-prev'||e.target.id==='nav-next') return; 
        
        // Left half of screen goes back, right half goes forward
        if (e.clientX < window.innerWidth / 2) {
-         goBack();
+ goBack();
        } else {
-         safeAdvance();
+ safeAdvance();
        }
      });
 
@@ -1132,43 +1132,43 @@ Contact:
       else if (e.code==='ArrowLeft'){ e.preventDefault(); startPage(currentPage-1); }
 
       const k = e.key;
-             if (k==='ArrowUp'){ 
-         pageModes[currentPage]=getNextImageMode(pageModes[currentPage]); 
-         markUserSetMode(currentPage); 
-         showImage(currentPage); 
+     if (k==='ArrowUp'){ 
+ pageModes[currentPage]=getNextImageMode(pageModes[currentPage]); 
+ markUserSetMode(currentPage); 
+ showImage(currentPage); 
        }
        else if (k==='ArrowDown'){ 
-         pageModes[currentPage]=getPreviousImageMode(pageModes[currentPage]); 
-         markUserSetMode(currentPage); 
-         showImage(currentPage); 
+ pageModes[currentPage]=getPreviousImageMode(pageModes[currentPage]); 
+ markUserSetMode(currentPage); 
+ showImage(currentPage); 
        }
       else if (k==='b'||k==='B'){ 
-        pageModes[currentPage]=IMG_BG; 
-        markUserSetMode(currentPage); 
-        showImage(currentPage); 
+pageModes[currentPage]=IMG_BG; 
+markUserSetMode(currentPage); 
+showImage(currentPage); 
       }
       else if (k==='l'||k==='L'){ 
-        pageModes[currentPage]=IMG_BELOW; 
-        markUserSetMode(currentPage); 
-        showImage(currentPage); 
+pageModes[currentPage]=IMG_BELOW; 
+markUserSetMode(currentPage); 
+showImage(currentPage); 
       }
-             else if (k==='s'||k==='S'){ 
-        pageModes[currentPage]=IMG_SIDE; 
-        markUserSetMode(currentPage); 
-        showImage(currentPage); 
-        adjustTextForSideImage(); 
+     else if (k==='s'||k==='S'){ 
+pageModes[currentPage]=IMG_SIDE; 
+markUserSetMode(currentPage); 
+showImage(currentPage); 
+adjustTextForSideImage(); 
       }
        else if (k==='a'||k==='A'){ 
-        pageModes[currentPage]=IMG_SMALL_SIDE; 
-        markUserSetMode(currentPage); 
-        showImage(currentPage); 
-        adjustTextForSideImage(); 
+pageModes[currentPage]=IMG_SMALL_SIDE; 
+markUserSetMode(currentPage); 
+showImage(currentPage); 
+adjustTextForSideImage(); 
       }
        else if (k==='o'||k==='O'){ 
-        pageModes[currentPage]=IMG_OFF; 
-        markUserSetMode(currentPage); 
-        showImage(currentPage); 
-        resetTextContainer(); 
+pageModes[currentPage]=IMG_OFF; 
+markUserSetMode(currentPage); 
+showImage(currentPage); 
+resetTextContainer(); 
       }
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
@@ -1179,11 +1179,11 @@ Contact:
     // Fullscreen functionality
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.log(`Error attempting to enable fullscreen: ${err.message}`);
-        });
+document.documentElement.requestFullscreen().catch(err => {
+  console.log(`Error attempting to enable fullscreen: ${err.message}`);
+});
       } else {
-        document.exitFullscreen();
+document.exitFullscreen();
       }
     }
 
@@ -1195,20 +1195,20 @@ Contact:
       let colorIndex=2; // Default to soft green (option 3)
       const colors=['#CCCCCC','#00FF00','#66FF66'];
       function apply(){
-        terminals.forEach(el=>{ if(!el) return;
-          el.style.color = colors[colorIndex];
-          el.style.textShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`; // Glow always on
-        });
-        
-        // Update cursor color to match
-        const customCursor = document.getElementById('custom-cursor');
-        if (customCursor) {
-          customCursor.style.background = colors[colorIndex];
-          customCursor.style.boxShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`;
-        }
+terminals.forEach(el=>{ if(!el) return;
+  el.style.color = colors[colorIndex];
+  el.style.textShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`; // Glow always on
+});
+
+// Update cursor color to match
+const customCursor = document.getElementById('custom-cursor');
+if (customCursor) {
+  customCursor.style.background = colors[colorIndex];
+  customCursor.style.boxShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`;
+}
       }
       document.addEventListener('keydown', (e)=>{
-        if (e.key==='1'||e.key==='2'||e.key==='3'){ colorIndex=parseInt(e.key,10)-1; apply(); }
+if (e.key==='1'||e.key==='2'||e.key==='3'){ colorIndex=parseInt(e.key,10)-1; apply(); }
       });
       apply();
     })();
@@ -1217,22 +1217,22 @@ Contact:
     window.onload = () => {
       // Hide any images that fail to load
       document.querySelectorAll('#page img').forEach(img => {
-        img.addEventListener('error', () => {
-          img.style.display = 'none';
-        });
+img.addEventListener('error', () => {
+  img.style.display = 'none';
+});
       });
       
       // Custom cursor functionality
       const customCursor = document.getElementById('custom-cursor');
       
       document.addEventListener('mousemove', (e) => {
-        customCursor.style.display = 'block';
-        customCursor.style.left = e.clientX - 10 + 'px';
-        customCursor.style.top = e.clientY - 10 + 'px';
+customCursor.style.display = 'block';
+customCursor.style.left = e.clientX - 10 + 'px';
+customCursor.style.top = e.clientY - 10 + 'px';
       });
       
       document.addEventListener('mouseleave', () => {
-        customCursor.style.display = 'none';
+customCursor.style.display = 'none';
       });
       
       startPage(0);
@@ -1245,39 +1245,39 @@ Contact:
       currentOverlayMode = mode; // Store the current mode
       const images = document.querySelectorAll('#page img');
       images.forEach(img => {
-        applyOverlayToImage(img, mode);
+applyOverlayToImage(img, mode);
       });
       
       // Also apply to video if it exists
       const video = document.getElementById('final-video');
       if (video) {
-        applyOverlayToVideo(video, mode);
+applyOverlayToVideo(video, mode);
       }
     }
     
-               // Apply overlay to a specific image
+       // Apply overlay to a specific image
       function applyOverlayToImage(img, mode) {
-        // Check if this is photo7 or photo23 (which should stay dimmed)
-        const isDimmedPhoto = img.id === 'img-7' || img.id === 'img-23';
-        const baseBrightness = isDimmedPhoto ? 0.3 : 0.7;
-        
-        if (mode === 'full') {
-          img.style.filter = `brightness(${baseBrightness}) sepia(1) hue-rotate(60deg) saturate(1.5)`;
-        } else if (mode === 'half') {
-          img.style.filter = `brightness(${baseBrightness}) sepia(0.5) hue-rotate(60deg) saturate(1.2)`;
-        } else if (mode === 'off') {
-          img.style.filter = `brightness(${baseBrightness})`;
-        }
+// Check if this is photo7 or photo23 (which should stay dimmed)
+const isDimmedPhoto = img.id === 'img-7' || img.id === 'img-23';
+const baseBrightness = isDimmedPhoto ? 0.3 : 0.7;
+
+if (mode === 'full') {
+  img.style.filter = `brightness(${baseBrightness}) sepia(1) hue-rotate(60deg) saturate(1.5)`;
+} else if (mode === 'half') {
+  img.style.filter = `brightness(${baseBrightness}) sepia(0.5) hue-rotate(60deg) saturate(1.2)`;
+} else if (mode === 'off') {
+  img.style.filter = `brightness(${baseBrightness})`;
+}
       }
     
-         // Apply overlay to a specific video
+ // Apply overlay to a specific video
      function applyOverlayToVideo(video, mode) {
        if (mode === 'full') {
-         video.style.filter = 'brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5)';
+ video.style.filter = 'brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5)';
        } else if (mode === 'half') {
-         video.style.filter = 'brightness(0.7) sepia(0.5) hue-rotate(60deg) saturate(1.2)';
+ video.style.filter = 'brightness(0.7) sepia(0.5) hue-rotate(60deg) saturate(1.2)';
        } else if (mode === 'off') {
-         video.style.filter = 'brightness(0.7)';
+ video.style.filter = 'brightness(0.7)';
        }
      }
   </script>
