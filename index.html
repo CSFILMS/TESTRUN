@@ -5,7 +5,23 @@
   <title>Terminal Access</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --fg:#D4D4D4; --bg:#000; --accent:#00FF00; --soft:#66FF66; }
+    /* Font Definitions */
+    @font-face {
+      font-family: 'IBM3270';
+      src: url('fonts/3270-Regular.woff2') format('woff2'),
+           url('fonts/3270-Regular.ttf') format('truetype'),
+           url('fonts/3270-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    :root { 
+      --fg:#D4D4D4; 
+      --bg:#000; 
+      --accent:#00FF00; 
+      --soft:#66FF66;
+      --font-family: monospace;
+    }
     html, body { height:100%; }
     
     /* COMPLETE RESET */
@@ -31,7 +47,7 @@
       height: 100vh;
       background: var(--bg);
       color: var(--fg);
-      font-family: monospace;
+      font-family: var(--font-family);
       font-size: 1.4rem;
       line-height: 1.6;
       user-select: none;
@@ -105,7 +121,7 @@
       background: #000;
       border: none;
       color: #00FF00;
-      font-family: monospace;
+      font-family: var(--font-family);
       font-size: inherit;
       outline: none;
       width: 26vw;
@@ -205,6 +221,17 @@
       });
     }
     
+    // Font cycling functionality
+    let currentFontIndex = 0;
+    const fonts = ['monospace', 'IBM3270'];
+    
+    function toggleFont() {
+      currentFontIndex = (currentFontIndex + 1) % fonts.length;
+      const newFont = fonts[currentFontIndex];
+      document.documentElement.style.setProperty('--font-family', newFont);
+      console.log('Font changed to:', newFont);
+    }
+
     // Keyboard controls - match lorem.html functionality
     document.addEventListener('keydown', function(e) {
       if (e.key === '+' || e.key === '=') {
@@ -231,6 +258,9 @@
       } else if (e.key === 'c' || e.key === 'C') {
         e.preventDefault();
         toggleGlow('off');
+      } else if (e.key === 'b' || e.key === 'B') {
+        e.preventDefault();
+        toggleFont();
       }
     });
     
@@ -308,7 +338,7 @@
     document.addEventListener('scroll', preventScroll, { passive: false });
     
     console.log('Terminal interface initialized');
-    console.log('Controls: +/- zoom, 0 reset, F fullscreen, 1/2/3 colors, Z/X/C glow');
+    console.log('Controls: +/- zoom, 0 reset, F fullscreen, 1/2/3 colors, Z/X/C glow, B font toggle');
     
     // Custom cursor functionality
     const customCursor = document.getElementById('custom-cursor');

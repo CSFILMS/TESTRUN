@@ -5,7 +5,23 @@
   <title>Unscramble + Images</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { --fg:#D4D4D4; --bg:#000; --accent:#00FF00; --soft:#66FF66; }
+    /* Font Definitions */
+    @font-face {
+      font-family: 'IBM3270';
+      src: url('fonts/3270-Regular.woff2') format('woff2'),
+           url('fonts/3270-Regular.ttf') format('truetype'),
+           url('fonts/3270-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    :root { 
+      --fg:#D4D4D4; 
+      --bg:#000; 
+      --accent:#00FF00; 
+      --soft:#66FF66;
+      --font-family: monospace;
+    }
     html, body { height:100%; }
     
     /* FORCE NO SCROLLING */
@@ -24,7 +40,7 @@
       height: 100vh;
       background:var(--bg); 
       color:var(--fg); 
-      font-family:monospace;
+      font-family:var(--font-family);
       padding:5vw; 
       padding-left: 20vw;
       max-width:80vw; 
@@ -295,7 +311,7 @@ z-index: 1;
       opacity: 0.6;
       color: var(--accent);
       text-shadow: 0 0 2px var(--accent), 0 0 8px var(--accent);
-      font-family: monospace;
+      font-family: var(--font-family);
       pointer-events: none;
       z-index: 1000;
     }
@@ -364,7 +380,7 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
- <span class="controls">[1/2/3] color • [↑/↓] image mode • [B] background • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [B] background/font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -1127,6 +1143,18 @@ scrambleFastChunks(el, pages[pageIndex], () => {
        }
      });
 
+    // Font cycling functionality
+    let currentFontIndex = 0;
+    const fonts = ['monospace', 'IBM3270'];
+    let lastBKeyAction = 'background'; // Track what B key last did
+    
+    function toggleFont() {
+      currentFontIndex = (currentFontIndex + 1) % fonts.length;
+      const newFont = fonts[currentFontIndex];
+      document.documentElement.style.setProperty('--font-family', newFont);
+      console.log('Font changed to:', newFont);
+    }
+
     window.addEventListener('keydown', (e) => {
       if (e.code==='Space'||e.code==='ArrowRight'){ e.preventDefault(); startPage(currentPage+1); }
       else if (e.code==='ArrowLeft'){ e.preventDefault(); startPage(currentPage-1); }
@@ -1143,9 +1171,16 @@ scrambleFastChunks(el, pages[pageIndex], () => {
  showImage(currentPage); 
        }
       else if (k==='b'||k==='B'){ 
-pageModes[currentPage]=IMG_BG; 
-markUserSetMode(currentPage); 
-showImage(currentPage); 
+        // Alternate between font toggle and background mode
+        if (lastBKeyAction === 'background') {
+          toggleFont();
+          lastBKeyAction = 'font';
+        } else {
+          pageModes[currentPage]=IMG_BG; 
+          markUserSetMode(currentPage); 
+          showImage(currentPage);
+          lastBKeyAction = 'background';
+        }
       }
       else if (k==='l'||k==='L'){ 
 pageModes[currentPage]=IMG_BELOW; 

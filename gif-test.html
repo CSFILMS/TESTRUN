@@ -3,7 +3,26 @@
 <head>
     <title>GIF TEST</title>
     <style>
-        body { background: black; color: green; font-family: monospace; padding: 20px; }
+        /* Font Definitions */
+        @font-face {
+            font-family: 'IBM3270';
+            src: url('fonts/3270-Regular.woff2') format('woff2'),
+                 url('fonts/3270-Regular.ttf') format('truetype'),
+                 url('fonts/3270-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        :root {
+            --font-family: monospace;
+        }
+        
+        body { 
+            background: black; 
+            color: green; 
+            font-family: var(--font-family); 
+            padding: 20px; 
+        }
     </style>
 </head>
 <body>
@@ -27,6 +46,27 @@
                 '<p style="color: red;">❌ GIF FAILED TO LOAD</p>';
         };
         img.src = 'photos/photo6.gif';
+        
+        // Font cycling functionality
+        let currentFontIndex = 0;
+        const fonts = ['monospace', 'IBM3270'];
+        
+        function toggleFont() {
+            currentFontIndex = (currentFontIndex + 1) % fonts.length;
+            const newFont = fonts[currentFontIndex];
+            document.documentElement.style.setProperty('--font-family', newFont);
+            console.log('Font changed to:', newFont);
+        }
+        
+        // Add keydown listener for B key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'b' || e.key === 'B') {
+                e.preventDefault();
+                toggleFont();
+            }
+        });
+        
+        console.log('Press B to toggle font between monospace and IBM3270');
     </script>
 </body>
 </html>
