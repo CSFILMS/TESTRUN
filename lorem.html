@@ -59,26 +59,26 @@
       width: 100%;
     }
     
-    body {
-      overflow: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background:var(--bg); 
-      color:var(--fg); 
-      font-family:var(--font-family);
-      padding:5vw; 
-      padding-left: 20vw;
-      max-width:80vw; 
-      margin: 2vh auto; 
-      line-height:1.6; 
-      user-select:none;
-      font-size: 1rem;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
+         body {
+       overflow: hidden;
+       position: fixed;
+       top: 0;
+       left: 0;
+       width: 100vw;
+       height: 100vh;
+       background:var(--bg); 
+       color:var(--fg); 
+       font-family:var(--font-family);
+       padding:5vw; 
+       padding-left: 25vw;
+       max-width:80vw; 
+       margin: 2vh auto; 
+       line-height:1.6; 
+       user-select:none;
+       font-size: 1rem;
+       min-height: 100vh;
+       box-sizing: border-box;
+     }
     
     /* CRT scanline effect */
     body::before {
@@ -404,7 +404,7 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
-   <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [+/-] size • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -441,14 +441,14 @@ IS THE WAR OF INFORMATION
 
 
 
-COGNITIVE WARFARE HAS BECOME THE WAY FOR FASCISTS TO CONSOLIDATE THEIR POWER THROUGH
+COGNITIVE WARFARE HAS BECOME THE METHOD THROUGH WHICH FASCISTS CONSOLIDATE THEIR POWER
 
 	>	OBSCURITY
 	>	CENSORSHIP
 	>	DISINFORMATION
 	>	SURVEILLANCE
 
-
+ARE THE EXISTENTIAL THREATS OF THIS ERA
 
 
 
@@ -684,8 +684,6 @@ console.warn('Could not load image modes from localStorage:', e);
     }
     
  const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
-    // Set page 4 (index 3) to background mode by default
-    pageModes[3] = IMG_BG;
     
     // Load saved image modes from localStorage
     loadPageModesFromStorage();
@@ -1219,15 +1217,7 @@ resetTextContainer();
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
       else if (k==='c'||k==='C'){ toggleGreenOverlay('off'); }
-             else if (k==='+'||k==='='){ 
-         currentFontSize = Math.min(currentFontSize + 0.1, 2.0); 
-         applyCurrentFont(); 
-       }
-       else if (k==='-'||k==='_'){ 
-         currentFontSize = Math.max(currentFontSize - 0.1, 0.5); 
-         applyCurrentFont(); 
-       }
-       else if (k==='f'||k==='F'){ toggleFullscreen(); }
+      else if (k==='f'||k==='F'){ toggleFullscreen(); }
     });
     
     // Fullscreen functionality
