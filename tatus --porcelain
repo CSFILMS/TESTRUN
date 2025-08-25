@@ -3,3 +3,8 @@
 [33mf5a48a9[m  GORGEOUS formatting overhaul - text now elegantly confined!
 [33m5634780[m Fix image mode toggle and add position persistence
 [33m9632aae[m Current state update
+[33m283eb4e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge completed - preserving current lorem.html state
+[33m73b5653[m Complete PITCHDECK clone with 6-font system: N forward, B backward, IBM3270 default
+[33m90dd775[m Add IBM 3270 terminal fonts and implement B key font toggle functionality
+[33m69c9f6c[m  Made all text smaller for more compact presentation
+[33m3e86a92[m  Fixed online vs local formatting issues for pages 18-19
