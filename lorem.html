@@ -15,6 +15,34 @@
       font-style: normal;
     }
     
+    @font-face {
+      font-family: 'PixelCarnageMono';
+      src: url('fonts/PixelCarnageMono.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'Crisp';
+      src: url('fonts/Crisp.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'ProggyCleanCE';
+      src: url('fonts/ProggyCleanCE.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'ProggySquare';
+      src: url('fonts/ProggySquare.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
     :root { 
       --fg:#D4D4D4; 
       --bg:#000; 
@@ -228,22 +256,22 @@ z-index: 1;
        box-sizing: border-box;
        overflow: hidden;
      }
-                    #unscramble { 
-      white-space: pre-wrap; 
-      font-size: 1.1rem;
-      line-height: 1.5;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      height: 100%;
-      overflow: hidden;
-      width: 100%;
-      box-sizing: border-box;
-      max-width: 100%;
-      /* Preserve original formatting - no text wrapping modifications */
-      text-indent: 0;
-      word-break: normal;
-      hyphens: none;
-    }
+                                         #unscramble { 
+       white-space: pre-wrap; 
+       font-size: 1.8rem;
+       line-height: 1.5;
+       word-wrap: break-word;
+       overflow-wrap: break-word;
+       height: 100%;
+       overflow: hidden;
+       width: 100%;
+       box-sizing: border-box;
+       max-width: 100%;
+       /* Preserve original formatting - no text wrapping modifications */
+       text-indent: 0;
+       word-break: normal;
+       hyphens: none;
+     }
      
      /* Handle indented line wrapping - preserve indentation for continuation lines */
      #unscramble .indented-line {
@@ -263,16 +291,17 @@ z-index: 1;
       font-size: 0.9rem;
     }
 
-    #nav { 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 3vh 0 1vh; 
-      font-size: 1.5rem;
-      min-height: 5vh;
-      position: relative;
-      gap: 4vw;
-    }
+         #nav { 
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       margin: 3vh 0 1vh; 
+       font-size: 1.8rem;
+       min-height: 5vh;
+       position: relative;
+       gap: 4vw;
+       text-align: center;
+     }
     #nav span { cursor:pointer; user-select:none; padding:0 1em; }
           #nav-msg { 
       flex-grow:1; 
@@ -316,6 +345,83 @@ z-index: 1;
       z-index: 1000;
     }
     
+    /* Help button - top right corner, above page counter */
+    #help-button {
+      position: fixed;
+      top: 2vh;
+      right: 3vw;
+      font-size: 1.5rem;
+      opacity: 0.8;
+      color: var(--accent);
+      text-shadow: 0 0 2px var(--accent), 0 0 8px var(--accent);
+      font-family: var(--font-family);
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    
+    #help-button:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+    
+    /* Help side panel */
+    #help-panel {
+      position: fixed;
+      top: 2vh;
+      right: 2vw;
+      width: 18vw;
+      max-width: 280px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-family);
+      font-size: 0.65rem;
+      line-height: 1.4;
+      z-index: 1000;
+      display: none;
+      backdrop-filter: blur(2px);
+    }
+    
+    #help-panel.show {
+      display: block;
+    }
+    
+    #help-content {
+      padding: 0.8rem;
+      position: relative;
+    }
+    
+    #help-close {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.3rem;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+      font-weight: bold;
+    }
+    
+    #help-close:hover {
+      opacity: 1;
+    }
+    
+    #help-text {
+      margin: 0;
+      white-space: pre-line;
+      text-shadow: 0 0 2px var(--accent);
+      color: var(--accent);
+    }
+    
+    #help-text strong {
+      color: var(--accent);
+      font-weight: bold;
+    }
+    
    /* Side mode: text on left, image on right */
       #text-wrap.side-mode {
 width: 50% !important;
@@ -356,11 +462,7 @@ z-index: 2 !important;
       line-height: 1.3 !important;
     }
      
-     /* Special rule: make slide 11 text slightly smaller to prevent navbar overlap */
-     #page[data-page="11"] #unscramble {
-       font-size: 1.0rem !important;
-       line-height: 1.3 !important;
-     }
+     
   </style>
 </head>
 <body>
@@ -380,10 +482,32 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
- <span class="controls">[1/2/3] color • [↑/↓] image mode • [B] background/font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [B] font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
+  
+  <!-- Help button (left side, opposite page counter) -->
+  <div id="help-button">+</div>
+  
+  <!-- Help guide side panel -->
+  <div id="help-panel">
+    <div id="help-content">
+      <div id="help-close">×</div>
+      <div id="help-text">
+        <strong>FONT</strong><br>
+        > 1/2/3/4/5 FONT COLOURS<br>
+        > B/N CYCLE FONTS<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;CURRENT FONT: <span id="current-font-display">monospace</span><br>
+        > +/- FONT SIZE<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;FONT SIZE: <span id="current-size-display">100%</span><br>
+        <br>
+        <strong>IMAGE</strong><br>
+        > UP/DOWN IMAGE POSITION<br>
+        > Z/X/C COLOUR PROFILE
+      </div>
+    </div>
+  </div>
   
   <!-- Custom cursor -->
   <div id="custom-cursor"></div>
@@ -1144,16 +1268,150 @@ scrambleFastChunks(el, pages[pageIndex], () => {
      });
 
     // Font cycling functionality
-    let currentFontIndex = 0;
-    const fonts = ['monospace', 'IBM3270'];
-    let lastBKeyAction = 'background'; // Track what B key last did
+    // Font cycling functionality - UPDATED WITH 6 FONTS - IBM3270 DEFAULT
+    let currentFontIndex = 1; // Start with IBM3270 (index 1) as default
+    let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
+         const fonts = [
+       { family: 'monospace', size: '1.8rem' },
+       { family: 'IBM3270', size: '1.8rem' },  // All fonts now use same base size
+       { family: 'PixelCarnageMono', size: '1.8rem' },
+       { family: 'Crisp', size: '1.8rem' },
+       { family: 'ProggyCleanCE', size: '1.8rem' },
+       { family: 'ProggySquare', size: '1.8rem' }
+     ];
     
-    function toggleFont() {
+    function cycleFontForward() {
       currentFontIndex = (currentFontIndex + 1) % fonts.length;
-      const newFont = fonts[currentFontIndex];
-      document.documentElement.style.setProperty('--font-family', newFont);
-      console.log('Font changed to:', newFont);
+      applyCurrentFont();
     }
+    
+    function cycleFontBackward() {
+      currentFontIndex = (currentFontIndex - 1 + fonts.length) % fonts.length;
+      applyCurrentFont();
+    }
+    
+             function applyCurrentFont() {
+      const selectedFont = fonts[currentFontIndex];
+      console.log('Applying font:', selectedFont);
+      
+      // Update the CSS custom property
+      document.documentElement.style.setProperty('--font-family', selectedFont.family);
+      
+      // Calculate the actual size with the current multiplier
+      const baseSize = parseFloat(selectedFont.size);
+      const actualSize = (baseSize * currentFontSize) + 'rem';
+      
+      // Apply the font family and size to main text elements (affected by size controls)
+      const mainTextElements = document.querySelectorAll('#unscramble, #prompt');
+      mainTextElements.forEach(el => {
+        if (el) {
+          el.style.fontFamily = selectedFont.family;
+          el.style.fontSize = actualSize;
+        }
+      });
+      
+      // Apply only font family to navbar and page counter (immune to size controls)
+      const navElements = document.querySelectorAll('#nav-msg, #nav-prev, #nav-next, #page-counter');
+      navElements.forEach(el => {
+        if (el) {
+          el.style.fontFamily = selectedFont.family;
+          // Keep original sizes: nav-msg (0.9rem), nav-prev/next (1.5rem), page-counter (0.7rem)
+        }
+      });
+      
+      // Apply font family to help button and panel
+      const helpButton = document.getElementById('help-button');
+      const helpPanel = document.getElementById('help-panel');
+      if (helpButton) {
+        helpButton.style.fontFamily = selectedFont.family;
+      }
+      if (helpPanel) {
+        helpPanel.style.fontFamily = selectedFont.family;
+      }
+      
+      // Also apply to body to ensure all elements inherit the font
+      document.body.style.fontFamily = selectedFont.family;
+      
+      // Update help panel displays
+      updateHelpDisplays();
+      
+      console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
+    }
+    
+    // Font size control functions
+    function increaseFontSize() {
+      currentFontSize = Math.min(currentFontSize + 0.1, 4.0); // Max 400%, 10% increments
+      applyCurrentFont();
+      updateHelpDisplays();
+      console.log('Font size increased to:', (currentFontSize * 100).toFixed(0) + '%');
+    }
+    
+         function decreaseFontSize() {
+       currentFontSize = Math.max(currentFontSize - 0.1, 0.3); // Min 30%, 10% increments
+       applyCurrentFont();
+       updateHelpDisplays();
+       console.log('Font size decreased to:', (currentFontSize * 100).toFixed(0) + '%');
+     }
+    
+    function resetFontSize() {
+      currentFontSize = 1.0; // Reset to 100% (base size)
+      applyCurrentFont();
+      updateHelpDisplays();
+      console.log('Font size reset to 100% (base size)');
+    }
+    
+    // Function to update help panel displays
+    function updateHelpDisplays() {
+      const fontDisplay = document.getElementById('current-font-display');
+      const sizeDisplay = document.getElementById('current-size-display');
+      
+      if (fontDisplay) {
+        fontDisplay.textContent = fonts[currentFontIndex].family;
+      }
+      
+      if (sizeDisplay) {
+        sizeDisplay.textContent = (currentFontSize * 100).toFixed(0) + '%';
+      }
+    }
+    
+    // Help panel functionality
+    const helpButton = document.getElementById('help-button');
+    const helpPanel = document.getElementById('help-panel');
+    const helpClose = document.getElementById('help-close');
+    
+    function showHelp() {
+      helpPanel.classList.add('show');
+      updateHelpDisplays(); // Update displays when showing help
+      console.log('Help panel shown');
+    }
+    
+    function hideHelp() {
+      helpPanel.classList.remove('show');
+      console.log('Help panel hidden');
+    }
+    
+    // Event listeners for help
+    helpButton.addEventListener('click', showHelp);
+    helpClose.addEventListener('click', hideHelp);
+    
+    // Close help with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && helpPanel.classList.contains('show')) {
+        hideHelp();
+      }
+    });
+    
+         // Log available controls
+     console.log('=== LOREM.HTML CONTROLS ===');
+     console.log('Font cycling: B (forward), N (backward)');
+     console.log('Font size: +/- (increase/decrease), 0 (reset)');
+     console.log('Navigation: Space/ArrowRight (next), ArrowLeft (prev)');
+     console.log('Image modes: ArrowUp/Down, L (below), S (side), A (small side), O (off)');
+     console.log('Colors: 1/2/3, Glow: Z/X/C, Fullscreen: F');
+     console.log('Available fonts:', fonts.length);
+     
+     // Listen for fullscreen changes to update navbar sizes
+     document.addEventListener('fullscreenchange', updateNavbarSizes);
 
     window.addEventListener('keydown', (e) => {
       if (e.code==='Space'||e.code==='ArrowRight'){ e.preventDefault(); startPage(currentPage+1); }
@@ -1171,16 +1429,19 @@ scrambleFastChunks(el, pages[pageIndex], () => {
  showImage(currentPage); 
        }
       else if (k==='b'||k==='B'){ 
-        // Alternate between font toggle and background mode
-        if (lastBKeyAction === 'background') {
-          toggleFont();
-          lastBKeyAction = 'font';
-        } else {
-          pageModes[currentPage]=IMG_BG; 
-          markUserSetMode(currentPage); 
-          showImage(currentPage);
-          lastBKeyAction = 'background';
-        }
+        cycleFontForward();
+      }
+      else if (k==='n'||k==='N'){ 
+        cycleFontBackward();
+      }
+      else if (k==='+'||k==='='){ 
+        increaseFontSize();
+      }
+      else if (k==='-'){ 
+        decreaseFontSize();
+      }
+      else if (k==='0'){ 
+        resetFontSize();
       }
       else if (k==='l'||k==='L'){ 
 pageModes[currentPage]=IMG_BELOW; 
@@ -1211,16 +1472,39 @@ resetTextContainer();
       else if (k==='f'||k==='F'){ toggleFullscreen(); }
     });
     
-    // Fullscreen functionality
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-document.documentElement.requestFullscreen().catch(err => {
-  console.log(`Error attempting to enable fullscreen: ${err.message}`);
-});
-      } else {
-document.exitFullscreen();
-      }
-    }
+         // Fullscreen functionality
+     function toggleFullscreen() {
+       if (!document.fullscreenElement) {
+         document.documentElement.requestFullscreen().catch(err => {
+           console.log(`Error attempting to enable fullscreen: ${err.message}`);
+         });
+       } else {
+         document.exitFullscreen();
+       }
+       
+       // Update navbar sizes after fullscreen change
+       setTimeout(updateNavbarSizes, 100);
+     }
+     
+     // Function to update navbar sizes based on viewport
+     function updateNavbarSizes() {
+       const navPrev = document.getElementById('nav-prev');
+       const navNext = document.getElementById('nav-next');
+       const navMsg = document.getElementById('nav-msg');
+       
+       if (navPrev && navNext) {
+         // Scale navbar size based on viewport
+         const isFullscreen = !!document.fullscreenElement;
+         const baseSize = isFullscreen ? '2.2rem' : '1.8rem';
+         
+         navPrev.style.fontSize = baseSize;
+         navNext.style.fontSize = baseSize;
+         
+         if (navMsg) {
+           navMsg.style.fontSize = isFullscreen ? '1.1rem' : '0.9rem';
+         }
+       }
+     }
 
     /* ================== COLOR/GLOW ================== */
     (function(){
@@ -1228,12 +1512,44 @@ document.exitFullscreen();
       const navNext = document.getElementById('nav-next');
       const terminals = [document.getElementById('unscramble'), document.getElementById('prompt'), document.getElementById('nav-msg'), navPrev, navNext, document.getElementById('page-counter')];
       let colorIndex=2; // Default to soft green (option 3)
-      const colors=['#CCCCCC','#00FF00','#66FF66'];
-      function apply(){
+      const colors=['#CCCCCC','#00FF00','#66FF66','#00DD00','#44AA44'];
+             function apply(){
 terminals.forEach(el=>{ if(!el) return;
   el.style.color = colors[colorIndex];
   el.style.textShadow = `0 0 2px ${colors[colorIndex]}, 0 0 12px ${colors[colorIndex]}`; // Glow always on
+  
+  // Ensure navbar and page counter keep their original sizes
+  if (el.id === 'nav-msg') {
+    el.style.fontSize = '0.9rem';
+  } else if (el.id === 'nav-prev' || el.id === 'nav-next') {
+    // Use dynamic sizing based on fullscreen state
+    const isFullscreen = !!document.fullscreenElement;
+    el.style.fontSize = isFullscreen ? '2.2rem' : '1.8rem';
+  } else if (el.id === 'page-counter') {
+    el.style.fontSize = '0.7rem';
+  }
 });
+
+// Update help button and panel colors to match
+const helpButton = document.getElementById('help-button');
+const helpPanel = document.getElementById('help-panel');
+if (helpButton) {
+  helpButton.style.color = colors[colorIndex];
+  helpButton.style.textShadow = `0 0 2px ${colors[colorIndex]}, 0 0 8px ${colors[colorIndex]}`;
+}
+if (helpPanel) {
+  helpPanel.style.borderColor = colors[colorIndex];
+  // Update help panel text color
+  const helpText = helpPanel.querySelector('#help-text');
+  const helpClose = helpPanel.querySelector('#help-close');
+  if (helpText) {
+    helpText.style.color = colors[colorIndex];
+    helpText.style.textShadow = `0 0 2px ${colors[colorIndex]}`;
+  }
+  if (helpClose) {
+    helpClose.style.color = colors[colorIndex];
+  }
+}
 
 // Update cursor color to match
 const customCursor = document.getElementById('custom-cursor');
@@ -1243,7 +1559,7 @@ if (customCursor) {
 }
       }
       document.addEventListener('keydown', (e)=>{
-if (e.key==='1'||e.key==='2'||e.key==='3'){ colorIndex=parseInt(e.key,10)-1; apply(); }
+if (e.key==='1'||e.key==='2'||e.key==='3'||e.key==='4'||e.key==='5'){ colorIndex=parseInt(e.key,10)-1; apply(); }
       });
       apply();
     })();
@@ -1271,6 +1587,12 @@ customCursor.style.display = 'none';
       });
       
       startPage(0);
+      
+      // Initialize help displays
+      updateHelpDisplays();
+      
+      // Apply the default font (IBM3270) on page load
+      applyCurrentFont();
     };
     
     // Global green overlay toggle function
@@ -1299,7 +1621,7 @@ const baseBrightness = isDimmedPhoto ? 0.3 : 0.7;
 if (mode === 'full') {
   img.style.filter = `brightness(${baseBrightness}) sepia(1) hue-rotate(60deg) saturate(1.5)`;
 } else if (mode === 'half') {
-  img.style.filter = `brightness(${baseBrightness}) sepia(0.5) hue-rotate(60deg) saturate(1.2)`;
+  img.style.filter = `brightness(${baseBrightness}) grayscale(1)`;
 } else if (mode === 'off') {
   img.style.filter = `brightness(${baseBrightness})`;
 }
@@ -1309,11 +1631,11 @@ if (mode === 'full') {
      function applyOverlayToVideo(video, mode) {
        if (mode === 'full') {
  video.style.filter = 'brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5)';
-       } else if (mode === 'half') {
- video.style.filter = 'brightness(0.7) sepia(0.5) hue-rotate(60deg) saturate(1.2)';
-       } else if (mode === 'off') {
+} else if (mode === 'half') {
+ video.style.filter = 'brightness(0.7) grayscale(1)';
+} else if (mode === 'off') {
  video.style.filter = 'brightness(0.7)';
-       }
+}
      }
   </script>
 </body>

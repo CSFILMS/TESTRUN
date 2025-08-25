@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Font Test</title>
+  <style>
+    body {
+      background: #000;
+      color: #00FF00;
+      font-family: monospace;
+      padding: 20px;
+      font-size: 16px;
+    }
+    
+    .font-test {
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px solid #00FF00;
+    }
+    
+    .font-test h3 {
+      margin: 0 0 10px 0;
+      color: #66FF66;
+    }
+    
+    .font-test p {
+      margin: 5px 0;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Font Test</h1>
+  <p>Testing each font individually...</p>
+  
+  <div class="font-test">
+    <h3>1. Default Monospace</h3>
+    <p style="font-family: monospace;">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</p>
+  </div>
+  
+  <div class="font-test">
+    <h3>2. IBM3270</h3>
+    <p style="font-family: 'IBM3270';">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</p>
+  </div>
+  
+  <div class="font-test">
+    <h3>3. PixelCarnageMono</h3>
+    <p style="font-family: 'PixelCarnageMono';">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</p>
+  </div>
+  
+  <div class="font-test">
+    <h3>4. Crisp</h3>
+    <p style="font-family: 'Crisp';">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</p>
+  </div>
+  
+  <div class="font-test">
+    <h3>5. ProggyCleanCE</h3>
+    <p style="font-family: 'ProggyCleanCE';">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</p>
+  </div>
+  
+  <div class="font-test">
+    <h3>6. ProggySquare</h3>
+    <p style="font-family: 'ProggySquare';">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</p>
+  </div>
+  
+  <script>
+    console.log('Simple font test loaded');
+    console.log('Check which fonts are displaying correctly above');
+  </script>
+</body>
+</html>
