@@ -59,26 +59,26 @@
       width: 100%;
     }
     
-         body {
-       overflow: hidden;
-       position: fixed;
-       top: 0;
-       left: 0;
-       width: 100vw;
-       height: 100vh;
-       background:var(--bg); 
-       color:var(--fg); 
-       font-family:var(--font-family);
-       padding:5vw; 
-       padding-left: 25vw;
-       max-width:80vw; 
-       margin: 2vh auto; 
-       line-height:1.6; 
-       user-select:none;
-       font-size: 1rem;
-       min-height: 100vh;
-       box-sizing: border-box;
-     }
+    body {
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background:var(--bg); 
+      color:var(--fg); 
+      font-family:var(--font-family);
+      padding:5vw; 
+      padding-left: 20vw;
+      max-width:80vw; 
+      margin: 2vh auto; 
+      line-height:1.6; 
+      user-select:none;
+      font-size: 1rem;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
     
     /* CRT scanline effect */
     body::before {
@@ -404,7 +404,7 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
- <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [+/-] size • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -1028,46 +1028,57 @@ for (let i=0;i<index;i++){
 for (let k=index*chunkSize;k<len;k++) display[k] = /\s/.test(text[k]) ? text[k] : chars[Math.floor(Math.random()*chars.length)];
 element.textContent = display.join('');
 index++;
-if ((index*chunkSize)>=len){
-  clearInterval(currentInterval);
-  currentInterval = null;
-  truncateTextToFit(element, text);
-  isAnimating=false;
-  navMsg.textContent='PRESS SPACEBAR TO CONTINUE';
-  navMsg.style.visibility='visible';
-  onComplete && onComplete();
-}
+ if ((index*chunkSize)>=len){
+   clearInterval(currentInterval);
+   currentInterval = null;
+   truncateTextToFit(element, text);
+   isAnimating=false;
+               // Only show navigation message for first two slides
+        if (currentPage <= 1) { // Use currentPage which is set in startPage
+          navMsg.textContent='PRESS SPACEBAR TO CONTINUE';
+          navMsg.style.visibility='visible';
+        }
+   onComplete && onComplete();
+ }
       },80);
     }
 
-    /* ================== PAGE RENDER ================== */
- function startPage(pageIndex){
-       if (pageIndex >= pages.length) pageIndex = 0;
-       if (pageIndex < 0) pageIndex = pages.length - 1;
-       currentPage = pageIndex;
-       
-       pageCounterEl.textContent = pageIndex + 1;
-       navMsg.style.visibility = 'hidden';
-       
-       // Set data-page attribute for CSS targeting
-       pageEl.setAttribute('data-page', pageIndex + 1);
-      
-      // Show text for all pages except the last one
-      if (pageIndex < pages.length - 1) {
-const textWrap = document.getElementById('text-wrap');
-if (textWrap) {
-  textWrap.style.display = 'block';
-}
+         /* ================== PAGE RENDER ================== */
+  function startPage(pageIndex){
+        if (pageIndex >= pages.length) pageIndex = 0;
+        if (pageIndex < 0) pageIndex = pages.length - 1;
+        currentPage = pageIndex;
+        
+        pageCounterEl.textContent = pageIndex + 1;
+        navMsg.style.visibility = 'hidden';
+        
+        // Set data-page attribute for CSS targeting
+        pageEl.setAttribute('data-page', pageIndex + 1);
+        
+        // NEW PLAN: Make text 20% smaller on slide 3 onwards
+        if (pageIndex >= 2) { // Slide 3 and beyond (index 2+)
+          currentFontSize = 0.8; // 80% = 20% smaller
+        } else {
+          currentFontSize = 1.0; // 100% for first two slides
+        }
+        applyCurrentFont(); // Apply the font size immediately
+        
+       // Show text for all pages except the last one
+       if (pageIndex < pages.length - 1) {
+ const textWrap = document.getElementById('text-wrap');
+ if (textWrap) {
+   textWrap.style.display = 'block';
+ }
 
-el.textContent='';
-isAnimating = false;
-scrambleFastChunks(el, pages[pageIndex], () => {
-  // Text displayed
-});
-      }
-      
-      showImage(pageIndex);
-    }
+ el.textContent='';
+ isAnimating = false;
+ scrambleFastChunks(el, pages[pageIndex], () => {
+   // Text displayed
+ });
+       }
+       
+       showImage(pageIndex);
+     }
 
     /* ================== NAV ================== */
     let lastAdvance = 0;
@@ -1167,27 +1178,8 @@ scrambleFastChunks(el, pages[pageIndex], () => {
       // Also apply to body to ensure all elements inherit the font
       document.body.style.fontFamily = selectedFont.family;
       
-             console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
-     }
-     
-     // Font size control functions
-     function increaseFontSize() {
-       currentFontSize = Math.min(currentFontSize + 0.1, 2.0); // Max 200%
-       applyCurrentFont();
-       console.log('Font size increased to:', (currentFontSize * 100).toFixed(0) + '%');
-     }
-     
-     function decreaseFontSize() {
-       currentFontSize = Math.max(currentFontSize - 0.1, 0.5); // Min 50%
-       applyCurrentFont();
-       console.log('Font size decreased to:', (currentFontSize * 100).toFixed(0) + '%');
-     }
-     
-     function resetFontSize() {
-       currentFontSize = 1.0; // Reset to 100%
-       applyCurrentFont();
-       console.log('Font size reset to 100%');
-     }
+      console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
+    }
 
     window.addEventListener('keydown', (e) => {
       if (e.code==='Space'||e.code==='ArrowRight'){ e.preventDefault(); startPage(currentPage+1); }
@@ -1232,15 +1224,6 @@ pageModes[currentPage]=IMG_OFF;
 markUserSetMode(currentPage); 
 showImage(currentPage); 
 resetTextContainer(); 
-      }
-      else if (k==='+'||k==='='){ 
-        increaseFontSize();
-      }
-      else if (k==='-'||k==='_'){ 
-        decreaseFontSize();
-      }
-      else if (k==='0'){ 
-        resetFontSize();
       }
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
