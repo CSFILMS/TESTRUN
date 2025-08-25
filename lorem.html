@@ -443,10 +443,10 @@ IS THE WAR OF INFORMATION
 
 COGNITIVE WARFARE HAS BECOME THE METHOD THROUGH WHICH FASCISTS CONSOLIDATE THEIR POWER
 
-	>	OBSCURITY
-	>	CENSORSHIP
-	>	DISINFORMATION
-	>	SURVEILLANCE
+    >   OBSCURITY
+    >   CENSORSHIP
+    >   DISINFORMATION
+    >   SURVEILLANCE
 
 ARE THE EXISTENTIAL THREATS OF THIS ERA
 
@@ -464,7 +464,7 @@ YOU KNOW THIS, HAVING PLAYED A HUGE PART ON BEHALF OF THE RESISTANCE TO SURVEILL
 
     
 OUR FILM FOCUSES ON ANOTHER BIG PLAYER IN THE WAR, A MAN WHO SHARES YOUR ROOTS IN THE CYPHERPUNK MOVEMENT,
-		
+
 > JULIAN ASSANGE, 
 THE FOUNDER OF WIKILEAKS
 
@@ -501,12 +501,12 @@ AND A WHISTLEBLOWER FROM THE ORGANISATION THE CIA HIRED TO SPY ON THEM
 
 WE TELL THE TRUE STORY OF HOW WIKILEAKS USED INFORMATION 
 
-	>	TO BRING DOWN CORRUPT REGIMES
+    >   TO BRING DOWN CORRUPT REGIMES
 
-	>	TO EXPOSE GOVERNMENT CORRUPTION 
-      AND DEMOCRATIC INTERFERENCE
+    >   TO EXPOSE GOVERNMENT CORRUPTION 
+    AND DEMOCRATIC INTERFERENCE
 
-	>	TO HELP END WARS
+    >   TO HELP END WARS
 
 
 
@@ -516,7 +516,7 @@ WE TELL THE TRUE STORY OF HOW WIKILEAKS USED INFORMATION
 
 AND TO SHOW HOW THE PEOPLE FAUGHT FOR HIS RELEASE, AGAINST THE MOST POWERFUL GOVERNMENTS OF THE WORLD,
 
-	AND WON.
+    AND WON.
 
 
 
@@ -567,31 +567,29 @@ THE WORLD BENEFITS FROM THE TRUTH
 
 
 > INITIAL CRYPTO CONTRIBUTION TO FUND 
-		
-	>	DISTRIBUTION, 
-	>	PROMOTION,
-	>	AND AN IMPACT CAMPAIGN
+
+    >   DISTRIBUTION, 
+    >   PROMOTION,
+    >   AND AN IMPACT CAMPAIGN
 
 > PUBLIC ENDORSEMENT (IF DESIRED) TO GALVANISE THE BROADER CRYPTO SPHERE
 
 > STRATEGIC GUIDANCE OR CONNECTION TO BITCOIN-ALIGNED DISTRIBUTION TOOLS
-		
 
 
 
 
     USE OF FUNDS: 
 
-
 > ACADEMY SCREENINGS AND CRYPTO-NATIVE DISTRIBUTION 
-        (NFT ACCESS PASSES, DECENTRALISED STREAMING)
+    (NFT ACCESS PASSES, DECENTRALISED STREAMING)
 
 > LEGAL AND SECURITY SUPPORT FOR CONTRIBUTORS IN HIGH-RISK ZONES
 
 > AGGRESSIVE PROMOTIONAL PUSH NOW THAT ASSANGE IS FREE AND PUBLIC ATTENTION IS RESURGENT
 
 > TRANSPARENCY GUARANTEED: 
- 	FUNDS HELD IN MULTI-SIG WALLET WITH REAL-TIME PUBLIC LEDGER
+    FUNDS HELD IN MULTI-SIG WALLET WITH REAL-TIME PUBLIC LEDGER
 
 
 
@@ -1040,34 +1038,40 @@ if ((index*chunkSize)>=len){
       },80);
     }
 
-    /* ================== PAGE RENDER ================== */
- function startPage(pageIndex){
-       if (pageIndex >= pages.length) pageIndex = 0;
-       if (pageIndex < 0) pageIndex = pages.length - 1;
-       currentPage = pageIndex;
+         /* ================== PAGE RENDER ================== */
+  function startPage(pageIndex){
+        if (pageIndex >= pages.length) pageIndex = 0;
+        if (pageIndex < 0) pageIndex = pages.length - 1;
+        currentPage = pageIndex;
+        
+        pageCounterEl.textContent = pageIndex + 1;
+        navMsg.style.visibility = 'hidden';
+        
+        // Set data-page attribute for CSS targeting
+        pageEl.setAttribute('data-page', pageIndex + 1);
        
-       pageCounterEl.textContent = pageIndex + 1;
-       navMsg.style.visibility = 'hidden';
+       // Reset font size to default for each new page
+       const currentFont = fonts[currentFontIndex];
+       const defaultSize = (parseFloat(currentFont.size) * currentFontSize) + 'rem';
+       el.style.fontSize = defaultSize;
+       el.style.paddingBottom = ''; // Reset any padding added by truncation
        
-       // Set data-page attribute for CSS targeting
-       pageEl.setAttribute('data-page', pageIndex + 1);
-      
-      // Show text for all pages except the last one
-      if (pageIndex < pages.length - 1) {
-const textWrap = document.getElementById('text-wrap');
-if (textWrap) {
-  textWrap.style.display = 'block';
-}
+       // Show text for all pages except the last one
+       if (pageIndex < pages.length - 1) {
+ const textWrap = document.getElementById('text-wrap');
+ if (textWrap) {
+   textWrap.style.display = 'block';
+ }
 
-el.textContent='';
-isAnimating = false;
-scrambleFastChunks(el, pages[pageIndex], () => {
-  // Text displayed
-});
-      }
-      
-      showImage(pageIndex);
-    }
+ el.textContent='';
+ isAnimating = false;
+ scrambleFastChunks(el, pages[pageIndex], () => {
+   // Text displayed
+ });
+       }
+       
+       showImage(pageIndex);
+     }
 
     /* ================== NAV ================== */
     let lastAdvance = 0;
