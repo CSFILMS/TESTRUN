@@ -404,7 +404,7 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
- <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+   <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [+/-] size • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -1219,7 +1219,15 @@ resetTextContainer();
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
       else if (k==='c'||k==='C'){ toggleGreenOverlay('off'); }
-      else if (k==='f'||k==='F'){ toggleFullscreen(); }
+             else if (k==='+'||k==='='){ 
+         currentFontSize = Math.min(currentFontSize + 0.1, 2.0); 
+         applyCurrentFont(); 
+       }
+       else if (k==='-'||k==='_'){ 
+         currentFontSize = Math.max(currentFontSize - 0.1, 0.5); 
+         applyCurrentFont(); 
+       }
+       else if (k==='f'||k==='F'){ toggleFullscreen(); }
     });
     
     // Fullscreen functionality
