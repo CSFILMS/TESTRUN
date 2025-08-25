@@ -404,7 +404,7 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
- <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [+/-] size • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -1167,8 +1167,27 @@ scrambleFastChunks(el, pages[pageIndex], () => {
       // Also apply to body to ensure all elements inherit the font
       document.body.style.fontFamily = selectedFont.family;
       
-      console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
-    }
+             console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
+     }
+     
+     // Font size control functions
+     function increaseFontSize() {
+       currentFontSize = Math.min(currentFontSize + 0.1, 2.0); // Max 200%
+       applyCurrentFont();
+       console.log('Font size increased to:', (currentFontSize * 100).toFixed(0) + '%');
+     }
+     
+     function decreaseFontSize() {
+       currentFontSize = Math.max(currentFontSize - 0.1, 0.5); // Min 50%
+       applyCurrentFont();
+       console.log('Font size decreased to:', (currentFontSize * 100).toFixed(0) + '%');
+     }
+     
+     function resetFontSize() {
+       currentFontSize = 1.0; // Reset to 100%
+       applyCurrentFont();
+       console.log('Font size reset to 100%');
+     }
 
     window.addEventListener('keydown', (e) => {
       if (e.code==='Space'||e.code==='ArrowRight'){ e.preventDefault(); startPage(currentPage+1); }
@@ -1213,6 +1232,15 @@ pageModes[currentPage]=IMG_OFF;
 markUserSetMode(currentPage); 
 showImage(currentPage); 
 resetTextContainer(); 
+      }
+      else if (k==='+'||k==='='){ 
+        increaseFontSize();
+      }
+      else if (k==='-'||k==='_'){ 
+        decreaseFontSize();
+      }
+      else if (k==='0'){ 
+        resetFontSize();
       }
       else if (k==='z'||k==='Z'){ toggleGreenOverlay('full'); }
       else if (k==='x'||k==='X'){ toggleGreenOverlay('half'); }
