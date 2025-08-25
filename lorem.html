@@ -684,6 +684,8 @@ console.warn('Could not load image modes from localStorage:', e);
     }
     
  const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
+    // Set page 4 (index 3) to background mode by default
+    pageModes[3] = IMG_BG;
     
     // Load saved image modes from localStorage
     loadPageModesFromStorage();
