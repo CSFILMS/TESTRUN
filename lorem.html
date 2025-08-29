@@ -562,7 +562,6 @@ AND THAT WE ALL HAVE A DUTY TO FIGHT FOR OUR FREEDOM AND DEMOCRACY
 
 
 
-
 WE HAVE ALREADY MET RESISTANCE IN TRADITIONAL MEDIA CHANNELS
 
 CORPORATE PLATFORMS BENEFIT FROM A DISTRACTED AUDIENCE AND A DISCREDITED ASSANGE
@@ -1072,6 +1071,11 @@ if ((index*chunkSize)>=len){
         
         // Set data-page attribute for CSS targeting
         pageEl.setAttribute('data-page', pageIndex + 1);
+        
+        // AUDIO CLEANUP: Stop video audio when navigating away from video page
+        if (currentPage === pages.length - 1) {
+          stopVideoAudio();
+        }
        
                // Reset font size to default for each new page
         const currentFont = fonts[currentFontIndex];
@@ -1380,6 +1384,63 @@ if (mode === 'full') {
  video.style.filter = 'brightness(0.7)';
 }
      }
+     
+     // AUDIO CLEANUP: Stop video audio when navigating away
+     function stopVideoAudio() {
+       const videoEl = document.getElementById('final-video');
+       if (videoEl) {
+         try {
+           // Pause the video
+           videoEl.pause();
+           
+           // Reset to beginning
+           videoEl.currentTime = 0;
+           
+           // Hide the video
+           videoEl.style.display = 'none';
+           
+           console.log('Video audio stopped and reset');
+         } catch (error) {
+           console.warn('Error stopping video audio:', error);
+         }
+       }
+     }
+
+     // PAGE VISIBILITY API: Stop audio when tab is not visible
+     function handlePageVisibilityChange() {
+       if (document.hidden) {
+         // Page is hidden (tab switched, minimized, etc.)
+         if (currentPage === pages.length - 1) {
+           stopVideoAudio();
+           console.log('Page hidden - video audio stopped');
+         }
+       }
+     }
+     
+     // Add page visibility listener for audio cleanup
+     document.addEventListener('visibilitychange', handlePageVisibilityChange);
+     
+     // Update navigation functions to include audio cleanup
+     const originalSafeAdvance = window.safeAdvance;
+     const originalGoBack = window.goBack;
+     
+     window.safeAdvance = function() {
+       if (!throttle()) return;
+       // Stop video audio before advancing
+       if (currentPage === pages.length - 1) {
+         stopVideoAudio();
+       }
+       originalSafeAdvance();
+     };
+     
+     window.goBack = function() {
+       if (!throttle()) return;
+       // Stop video audio before going back
+       if (currentPage === pages.length - 1) {
+         stopVideoAudio();
+       }
+       originalGoBack();
+     };
   </script>
 </body>
 </html>

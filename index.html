@@ -261,6 +261,31 @@
       { family: 'ProggySquare', size: '1.4rem' }
     ];
     
+    // Font loading verification
+    function verifyFonts() {
+      const testString = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      const testElement = document.createElement('span');
+      testElement.style.position = 'absolute';
+      testElement.style.visibility = 'hidden';
+      testElement.style.fontSize = '72px';
+      testElement.textContent = testString;
+      document.body.appendChild(testElement);
+      
+      const availableFonts = [];
+      fonts.forEach((font, index) => {
+        testElement.style.fontFamily = font.family;
+        const width = testElement.offsetWidth;
+        // If width is significantly different, font loaded successfully
+        if (width > 0) {
+          availableFonts.push(index);
+        }
+      });
+      
+      document.body.removeChild(testElement);
+      console.log('Available fonts:', availableFonts.map(i => fonts[i].family));
+      return availableFonts;
+    }
+    
     function cycleFontForward() {
       console.log('Forward key pressed, current index:', currentFontIndex);
       currentFontIndex = (currentFontIndex + 1) % fonts.length;
@@ -279,26 +304,33 @@
       const selectedFont = fonts[currentFontIndex];
       console.log('Applying font:', selectedFont);
       
-      // Update the CSS custom property
-      document.documentElement.style.setProperty('--font-family', selectedFont.family);
-      
-      // Calculate the actual size with the current multiplier
-      const baseSize = parseFloat(selectedFont.size);
-      const actualSize = (baseSize * currentFontSize) + 'rem';
-      
-      // Apply the font family and size to all text elements
-      const textElements = document.querySelectorAll('#boot, #prompt, #msg, input');
-      textElements.forEach(el => {
-        if (el) {
-          el.style.fontFamily = selectedFont.family;
-          el.style.fontSize = actualSize;
-        }
-      });
-      
-      // Also apply to body to ensure all elements inherit the font
-      document.body.style.fontFamily = selectedFont.family;
-      
-      console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
+      try {
+        // Update the CSS custom property
+        document.documentElement.style.setProperty('--font-family', selectedFont.family);
+        
+        // Calculate the actual size with the current multiplier
+        const baseSize = parseFloat(selectedFont.size);
+        const actualSize = (baseSize * currentFontSize) + 'rem';
+        
+        // Apply the font family and size to all text elements
+        const textElements = document.querySelectorAll('#boot, #prompt, #msg, input');
+        textElements.forEach(el => {
+          if (el) {
+            el.style.fontFamily = selectedFont.family;
+            el.style.fontSize = actualSize;
+          }
+        });
+        
+        // Also apply to body to ensure all elements inherit the font
+        document.body.style.fontFamily = selectedFont.family;
+        
+        console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
+      } catch (error) {
+        console.error('Error applying font:', error);
+        // Fallback to monospace if there's an error
+        document.documentElement.style.setProperty('--font-family', 'monospace');
+        document.body.style.fontFamily = 'monospace';
+      }
     }
     
     // Font size control functions
