@@ -1,0 +1,5 @@
+[33m89ad0c5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix formatting and indentation issues - standardize bullet points and spacing
+[33m1d1f619[m Update lorem.html
+[33m7e28bed[m Fix navigation message logic and implement automatic font sizing system
+[33m010a53b[m Add font size controls (+/- keys) and update navbar styling
+[33m9ba17a4[m Update text content and layout adjustments
