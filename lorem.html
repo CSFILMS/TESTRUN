@@ -1027,6 +1027,63 @@ if (element.scrollHeight > availableHeight) {
   }
 }
       }
+      
+      // NEW: Smart text sizing that prevents visible shrinking
+      function calculateOptimalFontSize(element, text, baseSize) {
+        // Create a temporary element to test sizing without affecting display
+        const testElement = element.cloneNode(true);
+        testElement.style.position = 'absolute';
+        testElement.style.visibility = 'hidden';
+        testElement.style.fontSize = baseSize + 'rem';
+        testElement.textContent = text;
+        document.body.appendChild(testElement);
+        
+        // Get available height
+        const textWrap = document.getElementById('text-wrap');
+        const availableHeight = textWrap ? textWrap.clientHeight : window.innerHeight * 0.6;
+        
+        let optimalSize = baseSize;
+        
+        // If text fits at base size, use it
+        if (testElement.scrollHeight <= availableHeight) {
+          document.body.removeChild(testElement);
+          return optimalSize;
+        }
+        
+        // Binary search for optimal font size (much faster than linear reduction)
+        let minSize = 0.8; // Minimum 80% of base size
+        let maxSize = baseSize;
+        
+        while (maxSize - minSize > 0.01) { // Precision to 0.01rem
+          optimalSize = (minSize + maxSize) / 2;
+          testElement.style.fontSize = optimalSize + 'rem';
+          
+          if (testElement.scrollHeight <= availableHeight) {
+            minSize = optimalSize; // This size works, try larger
+          } else {
+            maxSize = optimalSize; // This size is too big, try smaller
+          }
+        }
+        
+        // Clean up test element
+        document.body.removeChild(testElement);
+        
+        // Return the largest size that fits
+        return Math.max(minSize, 0.8);
+      }
+      
+      // NEW: Apply font size without visible changes
+      function applyFontSizeSmoothly(element, fontSize) {
+        // Set font size immediately to prevent layout shift
+        element.style.fontSize = fontSize + 'rem';
+        
+        // Ensure text container is properly sized
+        const textWrap = document.getElementById('text-wrap');
+        if (textWrap) {
+          textWrap.style.height = 'auto';
+          textWrap.style.overflow = 'visible';
+        }
+      }
 
     /* ================== SCRAMBLE ================== */
     function scrambleFastChunks(element, text, onComplete) {
@@ -1077,37 +1134,19 @@ if ((index*chunkSize)>=len){
           stopVideoAudio();
         }
        
-               // Reset font size to default for each new page
+               // SIMPLIFIED: Use consistent font sizing for better reliability
         const currentFont = fonts[currentFontIndex];
-        let defaultSize = (parseFloat(currentFont.size) * currentFontSize);
+        let defaultSize = parseFloat(currentFont.size);
         
-        // Page 4 gets 15% smaller text by default
-        if (pageIndex === 3) { // Page 4 (index 3)
-          defaultSize = defaultSize * 0.85; // 15% smaller
-        }
+        // Apply user's font size preference
+        defaultSize = defaultSize * currentFontSize;
         
-        // Page 6 gets 20% smaller text by default
-        if (pageIndex === 5) { // Page 6 (index 5)
-          defaultSize = defaultSize * 0.80; // 20% smaller
-        }
+        // Set a reasonable minimum size to prevent text from being too small
+        defaultSize = Math.max(defaultSize, 1.2);
         
-        // Page 9 gets 30% smaller text by default
-        if (pageIndex === 8) { // Page 9 (index 8)
-          defaultSize = defaultSize * 0.70; // 30% smaller
-        }
-        
-        // Page 18 gets 30% smaller text by default
-        if (pageIndex === 17) { // Page 18 (index 17)
-          defaultSize = defaultSize * 0.70; // 30% smaller
-        }
-        
-        // Page 19 gets 30% smaller text by default
-        if (pageIndex === 18) { // Page 19 (index 18)
-          defaultSize = defaultSize * 0.70; // 30% smaller
-        }
-        
+        // Apply font size immediately
         el.style.fontSize = defaultSize + 'rem';
-        el.style.paddingBottom = ''; // Reset any padding added by truncation
+        el.style.paddingBottom = ''; // Reset any padding
        
        // Show text for all pages except the last one
        if (pageIndex < pages.length - 1) {
@@ -1174,12 +1213,12 @@ if ((index*chunkSize)>=len){
     let currentFontIndex = 1; // Start with IBM3270 (index 1) as default
     let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
          const fonts = [
-       { family: 'monospace', size: '1.8rem' },
-       { family: 'IBM3270', size: '1.8rem' },  // All fonts now use same base size
-       { family: 'PixelCarnageMono', size: '1.8rem' },
-       { family: 'Crisp', size: '1.8rem' },
-       { family: 'ProggyCleanCE', size: '1.8rem' },
-       { family: 'ProggySquare', size: '1.8rem' }
+       { family: 'monospace', size: '1.6rem' },
+       { family: 'IBM3270', size: '1.6rem' },  // Consistent base size for all fonts
+       { family: 'PixelCarnageMono', size: '1.6rem' },
+       { family: 'Crisp', size: '1.6rem' },
+       { family: 'ProggyCleanCE', size: '1.6rem' },
+       { family: 'ProggySquare', size: '1.6rem' }
      ];
     
     function cycleFontForward() {
