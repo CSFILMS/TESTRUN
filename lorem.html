@@ -1221,12 +1221,12 @@ if ((index*chunkSize)>=len){
     let currentFontIndex = 1; // Start with IBM3270 (index 1) as default
     let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
          const fonts = [
-       { family: 'monospace', size: '1.6rem' },
-       { family: 'IBM3270', size: '1.6rem' },  // Consistent base size for all fonts
-       { family: 'PixelCarnageMono', size: '1.6rem' },
-       { family: 'Crisp', size: '1.6rem' },
-       { family: 'ProggyCleanCE', size: '1.6rem' },
-       { family: 'ProggySquare', size: '1.6rem' }
+       { family: 'monospace', size: '1.8rem' },
+       { family: 'IBM3270', size: '1.8rem' },  // Increased base size for better readability
+       { family: 'PixelCarnageMono', size: '1.8rem' },
+       { family: 'Crisp', size: '1.8rem' },
+       { family: 'ProggyCleanCE', size: '1.8rem' },
+       { family: 'ProggySquare', size: '1.8rem' }
      ];
     
     function cycleFontForward() {
@@ -1510,7 +1510,7 @@ if (mode === 'full') {
        }
        
        // Binary search for optimal font size (much faster than linear reduction)
-       let minSize = 0.6; // Minimum 60% of base size
+       let minSize = 0.9; // Minimum 90% of base size (much more readable)
        let maxSize = baseSize;
        let optimalSize = baseSize;
        
@@ -1528,8 +1528,8 @@ if (mode === 'full') {
        // Clean up test element
        document.body.removeChild(testElement);
        
-       // Return the largest size that fits, with minimum protection
-       return Math.max(minSize, 0.6);
+       // Return the largest size that fits, with better minimum protection
+       return Math.max(minSize, 0.9);
      }
      
      // Apply font size smoothly without visible changes
@@ -1559,6 +1559,9 @@ if (mode === 'full') {
        // Now set the text content at the correct size
        element.textContent = text;
        
+       // SAFETY CHECK: Ensure text is never too small to read
+       ensureReadableTextSize(element);
+       
        // Ensure no overflow
        const textWrap = document.getElementById('text-wrap');
        if (textWrap && element.scrollHeight > textWrap.clientHeight) {
@@ -1568,6 +1571,17 @@ if (mode === 'full') {
      
      // Override the old truncateTextToFit function to use smart sizing
      window.truncateTextToFit = smartTextFit;
+     
+     // ADDITIONAL SAFETY: Ensure text is never too small to read
+     function ensureReadableTextSize(element) {
+       const currentSize = parseFloat(getComputedStyle(element).fontSize);
+       const hardMinimum = 1.4; // Never go below 1.4rem for readability
+       
+       if (currentSize < hardMinimum) {
+         element.style.fontSize = hardMinimum + 'rem';
+         console.log('Applied hard minimum font size:', hardMinimum + 'rem');
+       }
+     }
   </script>
 </body>
 </html>
