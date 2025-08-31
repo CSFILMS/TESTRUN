@@ -1150,16 +1150,24 @@ if ((index*chunkSize)>=len){
        
        // Show text for all pages except the last one
        if (pageIndex < pages.length - 1) {
- const textWrap = document.getElementById('text-wrap');
- if (textWrap) {
-   textWrap.style.display = 'block';
- }
+         const textWrap = document.getElementById('text-wrap');
+         if (textWrap) {
+           textWrap.style.display = 'block';
+         }
 
- el.textContent='';
- isAnimating = false;
- scrambleFastChunks(el, pages[pageIndex], () => {
-   // Text displayed
- });
+         // NEW: Pre-calculate optimal font size before showing text
+         const currentSize = parseFloat(getComputedStyle(el).fontSize);
+         const textToShow = pages[pageIndex];
+         const optimalSize = calculateOptimalFontSize(el, textToShow, currentSize);
+         
+         // Apply optimal size immediately to prevent visible large text
+         applyFontSizeSmoothly(el, optimalSize);
+         
+         el.textContent='';
+         isAnimating = false;
+         scrambleFastChunks(el, textToShow, () => {
+           // Text displayed
+         });
        }
        
        showImage(pageIndex);
@@ -1480,6 +1488,86 @@ if (mode === 'full') {
        }
        originalGoBack();
      };
+     
+     // SMART TEXT SIZING FUNCTIONS - Fix text sizing issues
+     function calculateOptimalFontSize(element, text, baseSize) {
+       // Create a temporary element to test sizing without affecting display
+       const testElement = element.cloneNode(true);
+       testElement.style.position = 'absolute';
+       testElement.style.visibility = 'hidden';
+       testElement.style.fontSize = baseSize + 'rem';
+       testElement.textContent = text;
+       document.body.appendChild(testElement);
+       
+       // Get available height - use viewport height as fallback
+       const textWrap = document.getElementById('text-wrap');
+       const availableHeight = textWrap ? textWrap.clientHeight : window.innerHeight * 0.7;
+       
+       // If text fits at base size, use it
+       if (testElement.scrollHeight <= availableHeight) {
+         document.body.removeChild(testElement);
+         return baseSize;
+       }
+       
+       // Binary search for optimal font size (much faster than linear reduction)
+       let minSize = 0.6; // Minimum 60% of base size
+       let maxSize = baseSize;
+       let optimalSize = baseSize;
+       
+       while (maxSize - minSize > 0.02) { // Precision to 0.02rem
+         optimalSize = (minSize + maxSize) / 2;
+         testElement.style.fontSize = optimalSize + 'rem';
+         
+         if (testElement.scrollHeight <= availableHeight) {
+           minSize = optimalSize; // This size works, try larger
+         } else {
+           maxSize = optimalSize; // This size is too big, try smaller
+         }
+       }
+       
+       // Clean up test element
+       document.body.removeChild(testElement);
+       
+       // Return the largest size that fits, with minimum protection
+       return Math.max(minSize, 0.6);
+     }
+     
+     // Apply font size smoothly without visible changes
+     function applyFontSizeSmoothly(element, fontSize) {
+       // Set font size immediately to prevent layout shift
+       element.style.fontSize = fontSize + 'rem';
+       
+       // Ensure text container is properly sized
+       const textWrap = document.getElementById('text-wrap');
+       if (textWrap) {
+         textWrap.style.height = 'auto';
+         textWrap.style.overflow = 'visible';
+       }
+     }
+     
+     // Smart text fitting that prevents visible shrinking
+     function smartTextFit(element, text) {
+       // Get current font size
+       const currentSize = parseFloat(getComputedStyle(element).fontSize);
+       
+       // Calculate optimal size BEFORE setting text content
+       const optimalSize = calculateOptimalFontSize(element, text, currentSize);
+       
+       // Apply optimal size first
+       applyFontSizeSmoothly(element, optimalSize);
+       
+       // Now set the text content at the correct size
+       element.textContent = text;
+       
+       // Ensure no overflow
+       const textWrap = document.getElementById('text-wrap');
+       if (textWrap && element.scrollHeight > textWrap.clientHeight) {
+         element.style.paddingBottom = '1rem';
+       }
+     }
+     
+     // Override the old truncateTextToFit function to use smart sizing
+     window.truncateTextToFit = smartTextFit;
   </script>
 </body>
 </html>
