@@ -10,7 +10,7 @@ const CONFIG = {
 };
 
 // Debug: Log that script is loaded
-console.log('🚀 SCRIPT.JS LOADED - VERSION 3');
+console.log('🚀 SCRIPT.JS LOADED - VERSION 4 - FORCE REDIRECT');
 console.log('🎯 Will redirect to DRSEY_PITCHTEXT.html');
 
 // State management
@@ -151,8 +151,11 @@ function handlePasswordEntry(attempt) {
 
     runSequence(accessGrantedSequence, elements.msg, CONFIG.accessSequenceDelay, () => {
       setTimeout(() => {
-        console.log('Redirecting to DRSEY_PITCHTEXT.html...');
+        console.log('🎯 FORCE REDIRECTING TO DRSEY_PITCHTEXT.html...');
+        // Force redirect with multiple methods
         window.location.href = 'DRSEY_PITCHTEXT.html';
+        window.location.replace('DRSEY_PITCHTEXT.html');
+        document.location = 'DRSEY_PITCHTEXT.html';
       }, CONFIG.redirectDelay);
     });
   } else {
