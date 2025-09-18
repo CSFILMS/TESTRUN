@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Audio Visualizer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 1px solid #333;
+            display: block;
+            margin: 20px auto;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #555;
+        }
+        button:disabled {
+            background: #111;
+            color: #666;
+            cursor: not-allowed;
+        }
+        .vis-options {
+            margin: 20px;
+            text-align: center;
+        }
+        .vis-options label {
+            margin: 10px;
+            cursor: pointer;
+        }
+        .vis-options input[type="radio"] {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <audio id="audioSource" src="AUDIO/audio16.mp3" type="audio/mpeg" controls>
+            Your browser does not support the audio element.
+        </audio>
+        <br>
+        <button id="start">Start Visualization</button>
+    </div>
+
+    <div class="vis-options">
+        <label>
+            <input type="radio" name="vis" value="line" checked>
+            Line Graph
+        </label>
+        <label>
+            <input type="radio" name="vis" value="circle">
+            Circle Dots
+        </label>
+        <label>
+            <input type="radio" name="vis" value="spikes">
+            Circle Spikes
+        </label>
+        <label>
+            <input type="radio" name="vis" value="bars">
+            Bar Graph
+        </label>
+    </div>
+
+    <canvas id="canvas" width="800" height="400"></canvas>
+
+    <script>
+        // Constants
+        const TWO_PI = Math.PI * 2;
+
+        // Globals
+        let ctx;
+        let width, height;
+        let dataArray;
+        let analyser;
+        let run = true;
+        let hue = 0;
+        let currentVisualization = 'line';
+
+        // Initialize
+        window.addEventListener("load", () => {
+            const canvas = document.getElementById("canvas");
+            width = canvas.width;
+            height = canvas.height;
+            ctx = canvas.getContext("2d");
+
+            // Radio button listeners
+            document.querySelectorAll('input[name="vis"]').forEach(radio => {
+                radio.addEventListener("click", changeVisualization);
+            });
+
+            // Start button
+            document.getElementById("start").addEventListener("click", startVisualization);
+        });
+
+        function startVisualization() {
+            const audioElement = document.getElementById("audioSource");
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioCtx.createMediaElementSource(audioElement);
+            
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 512;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+
+            source.connect(analyser);
+            source.connect(audioCtx.destination);
+
+            document.getElementById("start").disabled = true;
+            
+            // Start with line visualization
+            currentVisualization = 'line';
+            startCurrentVisualization();
+        }
+
+        function changeVisualization() {
+            const selectedVis = document.querySelector('input[name="vis"]:checked').value;
+            run = false;
+            
+            setTimeout(() => {
+                currentVisualization = selectedVis;
+                run = true;
+                startCurrentVisualization();
+            }, 100);
+        }
+
+        function startCurrentVisualization() {
+            switch(currentVisualization) {
+                case 'line':
+                    visualizeLine();
+                    break;
+                case 'circle':
+                    visualizeCircle();
+                    break;
+                case 'spikes':
+                    visualizeSpikes();
+                    break;
+                case 'bars':
+                    visualizeBars();
+                    break;
+            }
+        }
+
+        // Line Graph Visualization
+        function visualizeLine() {
+            if (!run) return;
+            
+            analyser.getByteTimeDomainData(dataArray);
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = '#00FF00';
+            ctx.lineWidth = 2;
+            
+            const sliceWidth = width / dataArray.length;
+            let x = 0;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                const v = dataArray[i] / 128.0;
+                const y = (v * height / 2) + height / 2;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                x += sliceWidth;
+            }
+            
+            ctx.stroke();
+            requestAnimationFrame(visualizeLine);
+        }
+
+        // Circle Dots Visualization
+        function visualizeCircle() {
+            if (!run) return;
+            
+            analyser.getByteTimeDomainData(dataArray);
+            
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, width, height);
+            
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radianAdd = TWO_PI / dataArray.length;
+            let radian = 0;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                const v = dataArray[i];
+                const x = v * Math.cos(radian) + centerX;
+                const y = v * Math.sin(radian) + centerY;
+                
+                ctx.fillStyle = `hsl(${hue + i * 2}, 100%, 50%)`;
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, TWO_PI);
+                ctx.fill();
+                
+                radian += radianAdd;
+            }
+            
+            hue += 2;
+            if (hue > 360) hue = 0;
+            
+            requestAnimationFrame(visualizeCircle);
+        }
+
+        // Circle Spikes Visualization
+        function visualizeSpikes() {
+            if (!run) return;
+            
+            analyser.getByteTimeDomainData(dataArray);
+            
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, width, height);
+            
+            const radius = Math.min(width, height) / 4;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radianAdd = TWO_PI / dataArray.length;
+            let radian = 0;
+            
+            ctx.strokeStyle = '#00FF00';
+            ctx.lineWidth = 2;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                const startX = radius * Math.cos(radian) + centerX;
+                const startY = radius * Math.sin(radian) + centerY;
+                
+                let v = dataArray[i];
+                if (v < radius) v = radius;
+                
+                const endX = v * Math.cos(radian) + centerX;
+                const endY = v * Math.sin(radian) + centerY;
+                
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+                
+                radian += radianAdd;
+            }
+            
+            requestAnimationFrame(visualizeSpikes);
+        }
+
+        // Bar Graph Visualization
+        function visualizeBars() {
+            if (!run) return;
+            
+            analyser.getByteTimeDomainData(dataArray);
+            
+            ctx.fillRect(0, 0, width, height);
+            
+            const sliceWidth = width / dataArray.length;
+            let x = 0;
+            const centerY = height / 2;
+            
+            for (let i = 0; i < dataArray.length; i++) {
+                const barHeight = (dataArray[i] / 128.0) * height / 2;
+                const h = (i / dataArray.length) * 360;
+                
+                ctx.strokeStyle = `hsl(${h}, 100%, 75%)`;
+                ctx.lineWidth = sliceWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, centerY);
+                ctx.lineTo(x, centerY - barHeight);
+                ctx.stroke();
+                
+                x += sliceWidth;
+            }
+            
+            requestAnimationFrame(visualizeBars);
+        }
+    </script>
+</body>
+</html>

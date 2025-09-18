@@ -5,6 +5,34 @@
   <title>Unscramble + Images</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    /* Background video */
+    .bg-video {
+      position: fixed;
+      top: calc(2vh + 5vw - 1rem);
+      left: calc(50% + 1vw);
+      transform: translateX(-50%);
+      width: calc(57.5vw - 4rem);
+      height: calc(69vh - 4rem);
+      object-fit: cover;
+      object-position: top center;
+      z-index: -1;
+      pointer-events: none;
+      display: none;
+    }
+    /* Video overlay (disabled for small centered video) */
+    .bg-overlay {
+      display: none;
+    }
+    /* Your actual content goes above (z-index > 0) */
+    .content {
+      position: relative;
+      z-index: 1;
+      color: #e8e8e8;
+      font: 16px/1.5 system-ui, sans-serif;
+      padding: 6vmin;
+    }
+    html,body { height:100%; margin:0; background:#000; }
+
     /* Font Definitions */
     @font-face {
       font-family: 'IBM3270';
@@ -70,7 +98,7 @@
       color:var(--fg); 
       font-family:var(--font-family);
       padding:5vw; 
-      padding-left: 20vw;
+      padding-left: 25vw;
       max-width:80vw; 
       margin: 2vh auto; 
       line-height:1.6; 
@@ -340,7 +368,7 @@ z-index: 1;
     #page-counter {
       position: fixed;
       bottom: 2vh;
-      right: 3vw;
+      right: -2vw;
       font-size: 0.7rem;
       opacity: 0.6;
       color: var(--accent);
@@ -434,6 +462,29 @@ z-index: 2 !important;
   </style>
 </head>
 <body>
+  <!-- Background video for last page -->
+  <video
+    id="bg-video"
+    class="bg-video"
+    autoplay
+    muted
+    playsinline
+    loop
+    preload="metadata"
+    poster="./assets/bg-poster.jpg"
+    aria-hidden="true"
+    tabindex="-1"
+    disablepictureinpicture
+    controlslist="nodownload noplaybackrate noptimizequality nodatachannel"
+    volume="0"
+    defaultMuted
+  >
+    <source src="VIDEOS/video15.mp4" type="video/mp4" />
+    <source src="VIDEOS/video15.webm" type="video/webm" />
+  </video>
+
+  <div class="bg-overlay" id="bg-overlay" style="display: none;"></div>
+
   <div id="page">
     <div id="text-wrap">
       <div id="unscramble"></div>
@@ -557,19 +608,18 @@ WikiLeaks built a secure publishing platform that bypassed traditional media gat
 It published the infamous Collateral Murder video in 2010
 
 
-
-
-
 followed by the Afghan and Iraq War Logs, and the Cablegate diplomatic archives
 
 
-and in doing so they changed public perception on
+
+
+changing public perception on
 
 	> war
 	> diplomacy
 	> power
 
-In the process, Assange became both symbol and target.
+In the process, Assange became both a symbol and a target.
 
 
 
@@ -577,11 +627,22 @@ In the process, Assange became both symbol and target.
 
 Spied on by the CIA for years while under house arrest in an embassy flat
 
+
+
+
 Sold out by Lenin Moreno for 6 Billion dollars in an IMF loan
+
+
+
 
 held in isolation for years in the UK's highest security prison
 
+
+
+
+
 Indicted under the Espionage act, a historic first for a publisher, he only gained his release through a plea deal 
+
 
 
 He has paid the price for publishing
@@ -608,30 +669,26 @@ Cryptocurrency is what held the organisation afloat when traditional channels we
 
 
 Early BTC donations helped WikiLeaks survive.
-
+s
 The Cypherpunk roots of Bitcoin and WikiLeaks are the same: 
 
         > privacy
         > decentralisation
         > freedom
 
-AssangeDAO (2022) raised $53M in a week for Assange’s legal defense.
 
 
 
 
 
 
-Our film challenges entrenched narratives. 
+Our film challenges entrenched narratives
 
-We have already met resistance in traditional media channels.
+We have already met resistance in traditional media channels
 
-Corporate platforms benefit from a distracted audience and a discredited Assange.
+We need decentralised support to bypass censorship and algorithmic throttling
 
-We need decentralised support to bypass censorship and algorithmic throttling.
-
-You know the architecture of silence. 
-
+You know the architecture of silence
 
 Help us break it.
 
@@ -676,7 +733,7 @@ Help us break it.
 
 
 
-		Transparency guaranteed: 
+	Transparency guaranteed: 
 
 > funds held in multi-sig wallet with real-time public ledger.
 
@@ -689,7 +746,15 @@ Help us break it.
 		Why You?
 
 
-Your voice has stood consistently for decentralisation, free speech, and Bitcoin as resistance. 
+Your voice has stood consistently for 
+
+> decentralisation
+> free speech
+> Bitcoin as resistance. 
+
+
+
+
 
 You understand that speech without infrastructure is performative. 
 
@@ -704,22 +769,7 @@ Assange’s prosecution is a prosecution of infrastructure:
 
 Supporting this film continues the work you’ve always done.
 
-The crypto community, the network that kept Assange alive 
-
-can now ensure he’s not erased.
-
-
-
-
-
-
-
 Let’s finish what we started.
-
-
-
-
-
 
 
 Contact:
@@ -733,6 +783,135 @@ Contact:
     let audioEnabled = true;
     let debugMode = true;
     let currentSoundVariation = 0; // 0-4 for 5 different variations
+    let currentAudio = null; // Track currently playing audio
+    let audioVolume = 0.7; // Default volume level
+    
+    // Function to stop any currently playing audio
+    function stopCurrentAudio() {
+      if (currentAudio) {
+        console.log('🛑 Stopping current audio...');
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio.src = ''; // Clear the source
+        currentAudio.load(); // Reset the audio element
+        currentAudio = null;
+      }
+      
+      // Stop any visualizers (disabled)
+      stop3DVisualizer();
+      
+      // Also stop any other audio elements that might be playing
+      const allAudioElements = document.querySelectorAll('audio');
+      allAudioElements.forEach(audio => {
+        if (!audio.paused) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    }
+    
+    
+    
+    
+    
+    // Visualizer variables (disabled)
+    let visualizerScene = null;
+    let visualizerCamera = null;
+    let visualizerRenderer = null;
+    let visualizerMesh = null;
+    let visualizerUniforms = null;
+    let visualizerAnalyser = null;
+    let visualizerDataArray = null;
+    let visualizerRunning = false;
+    let visualizerComposer = null;
+
+    // Visualizer functions (disabled)
+    function init3DVisualizer() {
+      // Disabled
+    }
+
+    function start3DVisualizer(audioElement) {
+      // Disabled
+    }
+
+    function stop3DVisualizer() {
+      // Disabled
+    }
+
+    function animate3DVisualizer() {
+      // Disabled
+    }
+
+    // Mouse tracking for camera movement
+    let mouseX = 0;
+    let mouseY = 0;
+    document.addEventListener('mousemove', function (e) {
+      const windowHalfX = window.innerWidth / 2;
+      const windowHalfY = window.innerHeight / 2;
+      mouseX = (e.clientX - windowHalfX) / 100;
+      mouseY = (e.clientY - windowHalfY) / 100;
+      window.mouseX = mouseX;
+      window.mouseY = mouseY;
+    });
+
+    // Test audio function
+    function testAudio() {
+      console.log('🧪 Testing audio playback...');
+      const testAudio = new Audio('AUDIO/audio15.mp3');
+      testAudio.volume = 0.7;
+      
+      testAudio.addEventListener('play', () => {
+        console.log('✅ Test audio started playing!');
+      });
+      
+      testAudio.addEventListener('error', (e) => {
+        console.error('❌ Test audio error:', e);
+      });
+      
+      testAudio.play().then(() => {
+        console.log('✅ Test audio playing successfully');
+      }).catch(err => {
+        console.log('❌ Test audio play failed:', err.message);
+        console.log('🔧 Error details:', err);
+      });
+    }
+
+    // Video background functions
+    function showVideoBackground() {
+      console.log('🎬 Showing video15...');
+      const video = document.getElementById('bg-video');
+      
+      if (video) {
+        console.log('✅ Video element found, showing...');
+        video.style.display = 'block';
+        
+        // Ensure video is completely muted
+        video.muted = true;
+        video.volume = 0;
+        video.defaultMuted = true;
+        
+        // Reset video to beginning for sync
+        video.currentTime = 0;
+        
+        video.play().then(() => {
+          console.log('✅ Video15 playing from start (muted)');
+        }).catch(err => {
+          console.log('❌ Video15 play failed:', err.message);
+        });
+      } else {
+        console.error('❌ Video element not found!');
+      }
+    }
+
+    function hideVideoBackground() {
+      console.log('🛑 Hiding video...');
+      const video = document.getElementById('bg-video');
+      
+      if (video) {
+        video.pause();
+        video.style.display = 'none';
+      }
+    }
     
     // Enhanced audio context initialization with debugging
     function initAudioContext() {
@@ -865,7 +1044,7 @@ Contact:
         beepsPerChunk: 4,
         timeBetweenBeeps: 10,
         beepDuration: 0.025,
-        volume: 0.3
+        volume: 0.15
       },
       {
         name: "Deep Mechanical",
@@ -873,7 +1052,7 @@ Contact:
         beepsPerChunk: 3,
         timeBetweenBeeps: 15,
         beepDuration: 0.035,
-        volume: 0.35
+        volume: 0.18
       },
       {
         name: "High Frequency Burst",
@@ -881,7 +1060,7 @@ Contact:
         beepsPerChunk: 6,
         timeBetweenBeeps: 8,
         beepDuration: 0.020,
-        volume: 0.25
+        volume: 0.12
       },
       {
         name: "Stutter Pattern",
@@ -889,7 +1068,7 @@ Contact:
         beepsPerChunk: 5,
         timeBetweenBeeps: [5, 5, 20, 5, 5], // Variable timing for stutter effect
         beepDuration: 0.030,
-        volume: 0.32
+        volume: 0.16
       },
       {
         name: "Dual Tone",
@@ -897,7 +1076,7 @@ Contact:
         beepsPerChunk: 4,
         timeBetweenBeeps: 12,
         beepDuration: 0.025,
-        volume: 0.28
+        volume: 0.14
       }
     ];
     
@@ -1029,6 +1208,120 @@ Contact:
       }
     }
 
+    // Enhanced audio function for page 8
+    function playAudioForPage8() {
+      console.log('🎵 Attempting to play audio for page 8...');
+      
+      if (!audioEnabled) {
+        console.log('🔇 Audio disabled, skipping');
+        return;
+      }
+      
+      // Stop any current audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      
+      // Create new audio with better error handling
+      const audio = new Audio();
+      audio.src = 'AUDIO/audio7.mp3';
+      audio.volume = audioVolume;
+      audio.preload = 'auto';
+      
+      console.log('🎵 Audio source:', audio.src);
+      console.log('🎵 Audio volume:', audioVolume);
+      console.log('🎵 Audio enabled:', audioEnabled);
+      
+      // Multiple event listeners for better compatibility
+      audio.addEventListener('loadstart', () => {
+        console.log('🔄 Audio loading started');
+      });
+      
+      audio.addEventListener('loadeddata', () => {
+        console.log('📊 Audio data loaded');
+      });
+      
+      audio.addEventListener('canplay', () => {
+        console.log('▶️ Audio can play');
+        currentAudio = audio;
+        audio.play().then(() => {
+          console.log('✅ Audio playing for page 8');
+        }).catch(err => {
+          console.error('❌ Audio play failed:', err);
+          console.error('❌ Error details:', err.message);
+          showAudioError('Audio play failed: ' + err.message);
+        });
+      });
+      
+      audio.addEventListener('error', (e) => {
+        console.error('❌ Audio load failed:', e);
+        console.error('❌ Audio src was:', audio.src);
+        console.error('❌ Error code:', audio.error ? audio.error.code : 'unknown');
+        showAudioError('Audio file not found or corrupted');
+      });
+      
+      // Force load
+      audio.load();
+    }
+
+    // Enhanced audio function for page 12
+    function playAudioForPage12() {
+      console.log('🎵 Attempting to play audio for page 12...');
+      
+      if (!audioEnabled) {
+        console.log('🔇 Audio disabled, skipping');
+        return;
+      }
+      
+      // Stop any current audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      
+      // Create new audio with better error handling
+      const audio = new Audio();
+      audio.src = 'AUDIO/audio9.mp3';
+      audio.volume = audioVolume;
+      audio.preload = 'auto';
+      
+      console.log('🎵 Audio source:', audio.src);
+      console.log('🎵 Audio volume:', audioVolume);
+      console.log('🎵 Audio enabled:', audioEnabled);
+      
+      // Multiple event listeners for better compatibility
+      audio.addEventListener('loadstart', () => {
+        console.log('🔄 Audio loading started');
+      });
+      
+      audio.addEventListener('loadeddata', () => {
+        console.log('📊 Audio data loaded');
+      });
+      
+      audio.addEventListener('canplay', () => {
+        console.log('▶️ Audio can play');
+        currentAudio = audio;
+        audio.play().then(() => {
+          console.log('✅ Audio playing for page 12');
+        }).catch(err => {
+          console.error('❌ Audio play failed:', err);
+          console.error('❌ Error details:', err.message);
+          showAudioError('Audio play failed: ' + err.message);
+        });
+      });
+      
+      audio.addEventListener('error', (e) => {
+        console.error('❌ Audio load failed:', e);
+        console.error('❌ Audio src was:', audio.src);
+        console.error('❌ Error code:', audio.error ? audio.error.code : 'unknown');
+        showAudioError('Audio file not found or corrupted');
+      });
+      
+      // Force load
+      audio.load();
+    }
+
     /* ================== PREP ================== */
     const fullText = fullTextRaw.toUpperCase();
     const pages = fullText.split(/\n{4,}/);
@@ -1136,6 +1429,57 @@ console.warn('Could not load image modes from localStorage:', e);
       };
     };
     
+    // Debug function - test audio 8
+    window.testAudio8 = function() {
+      console.log('🎵 Testing audio 8...');
+      playAudioForPage8();
+    };
+    
+    // Debug function - test audio 12
+    window.testAudio12 = function() {
+      console.log('🎵 Testing audio 12...');
+      playAudioForPage12();
+    };
+    
+    // Simple test function for audio 8
+    window.testAudio7Simple = function() {
+      console.log('🎵 Testing audio7.mp3...');
+      const audio = new Audio('AUDIO/audio7.mp3');
+      audio.volume = 0.7;
+      audio.play().then(() => {
+        console.log('✅ Audio7 playing successfully');
+      }).catch(err => {
+        console.log('❌ Audio7 failed:', err.message);
+      });
+    };
+    
+    // Simple test function for audio 15
+    window.testAudio15Simple = function() {
+      console.log('🎵 Testing audio15.mp3...');
+      const audio = new Audio('AUDIO/audio15.mp3');
+      audio.volume = 0.7;
+      audio.play().then(() => {
+        console.log('✅ Audio15 playing successfully');
+      }).catch(err => {
+        console.log('❌ Audio15 failed:', err.message);
+      });
+    };
+    
+    // Test visualizer function
+    window.testVisualizer = function() {
+      console.log('🎨 Testing visualizer...');
+      const canvas = document.getElementById('audio-visualizer');
+      if (canvas) {
+        canvas.style.display = 'block';
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'red';
+        ctx.fillRect(100, 100, 200, 200);
+        console.log('✅ Visualizer test - red square should appear');
+      } else {
+        console.error('❌ Canvas not found');
+      }
+    };
+    
 
     // DOM
     const pageEl = document.getElementById('page');
@@ -1149,6 +1493,7 @@ console.warn('Could not load image modes from localStorage:', e);
     let isAnimating = false;
     let currentInterval = null;
     let availableKeywords = new Set(); // Store available photo keywords
+    let audioTimeout = null; // Track audio timeout
 
     // Test if a specific photo file exists
     function testPhotoExists(keyword, format) {
@@ -1680,6 +2025,116 @@ if ((index*chunkSize)>=len){
        }
        
        showImage(pageIndex);
+       
+       // Play audio for page 7 - simple autoplay with 3 second delay
+       if (pageIndex + 1 === 7) {
+         console.log('🎵 Playing audio for page 7 in 3 seconds...');
+         // Clear any existing timeout
+         if (audioTimeout) {
+           clearTimeout(audioTimeout);
+         }
+         audioTimeout = setTimeout(() => {
+           stopCurrentAudio(); // Stop any currently playing audio
+           const audio = new Audio('AUDIO/audio7.mp3');
+           audio.volume = 0.56; // 20% quieter (0.7 * 0.8)
+           currentAudio = audio; // Track the new audio
+           audio.play().then(() => {
+             console.log('✅ Audio playing successfully');
+           }).catch(err => {
+             console.log('❌ Audio play failed:', err.message);
+             console.log('💡 Try clicking anywhere on the page first, then navigate to page 7');
+           });
+         }, 3000);
+       }
+       
+       // Play audio for page 10 - simple autoplay (no delay)
+       if (pageIndex + 1 === 10) {
+         console.log('🎵 Playing audio for page 10...');
+         // Clear any existing timeout
+         if (audioTimeout) {
+           clearTimeout(audioTimeout);
+         }
+         stopCurrentAudio(); // Stop any currently playing audio
+         const audio = new Audio('AUDIO/audio10.mp3');
+         audio.volume = 0.875; // 25% louder (0.7 * 1.25)
+         currentAudio = audio; // Track the new audio
+         audio.play().then(() => {
+           console.log('✅ Audio playing successfully');
+         }).catch(err => {
+           console.log('❌ Audio play failed:', err.message);
+           console.log('💡 Try clicking anywhere on the page first, then navigate to page 10');
+         });
+       }
+       
+       // Play audio for page 9 - simple autoplay (no delay)
+       if (pageIndex + 1 === 9) {
+         console.log('🎵 Playing audio for page 9...');
+         // Clear any existing timeout
+         if (audioTimeout) {
+           clearTimeout(audioTimeout);
+         }
+         stopCurrentAudio(); // Stop any currently playing audio
+         const audio = new Audio('AUDIO/audio9.mp3');
+         audio.volume = 0.7;
+         currentAudio = audio; // Track the new audio
+         audio.play().then(() => {
+           console.log('✅ Audio playing successfully');
+         }).catch(err => {
+           console.log('❌ Audio play failed:', err.message);
+           console.log('💡 Try clicking anywhere on the page first, then navigate to page 9');
+         });
+       }
+       
+       // Play audio for page 13 - simple autoplay (no delay)
+       if (pageIndex + 1 === 13) {
+         console.log('🎵 Playing audio for page 13...');
+         // Clear any existing timeout
+         if (audioTimeout) {
+           clearTimeout(audioTimeout);
+         }
+         stopCurrentAudio(); // Stop any currently playing audio
+         const audio = new Audio('AUDIO/audio13.mp3');
+         audio.volume = 0.7;
+         currentAudio = audio; // Track the new audio
+         audio.play().then(() => {
+           console.log('✅ Audio playing successfully');
+         }).catch(err => {
+           console.log('❌ Audio play failed:', err.message);
+           console.log('💡 Try clicking anywhere on the page first, then navigate to page 13');
+         });
+       }
+       
+      // Play audio for page 15 - simple autoplay
+      if (pageIndex + 1 === 15) {
+        console.log('🎵 Playing audio for page 15...');
+        // Clear any existing timeout
+        if (audioTimeout) {
+          clearTimeout(audioTimeout);
+        }
+        stopCurrentAudio(); // Stop any currently playing audio
+        
+        const audio = new Audio('AUDIO/audio15.mp3');
+        audio.volume = 0.7;
+        currentAudio = audio; // Track the new audio
+        
+        audio.play().then(() => {
+          console.log('✅ Audio playing successfully');
+        }).catch(err => {
+          console.log('❌ Audio play failed:', err.message);
+          console.log('💡 Try clicking anywhere on the page first, then navigate to page 15');
+        });
+      }
+       
+       // Show video on slide 15
+       console.log(`🔍 Debug: Current page ${pageIndex + 1}, checking for video on slide 15...`);
+       if (pageIndex + 1 === 15) {
+         console.log('🎬 SLIDE 15 - Showing video...');
+         showVideoBackground();
+       } else {
+         console.log(`🎬 Not slide 15 (current: ${pageIndex + 1}), hiding video...`);
+         // Hide video on other pages
+         hideVideoBackground();
+       }
      }
 
     // Create persistent text that stays on screen
@@ -1855,6 +2310,18 @@ resetTextContainer();
       else if (k==='q'||k==='Q'){ prevSoundVariation(); }
       else if (k==='w'||k==='W'){ nextSoundVariation(); }
       else if (k==='f'||k==='F'){ toggleFullscreen(); }
+      else if (k==='a'||k==='A'){ 
+        console.log('🧪 A key pressed - testing audio...');
+        testAudio();
+      }
+      else if (k==='v'||k==='V'){ 
+        console.log('🧪 V key pressed - testing video...');
+        showVideoBackground();
+      }
+      else if (k==='h'||k==='H'){ 
+        console.log('🧪 H key pressed - hiding video...');
+        hideVideoBackground();
+      }
     });
     
     // Fullscreen functionality
@@ -1896,6 +2363,7 @@ if (e.key==='1'||e.key==='2'||e.key==='3'){ colorIndex=parseInt(e.key,10)-1; app
 
     /* ================== INIT ================== */
     window.onload = () => {
+      // Video will only show on page 15 via the page navigation logic
       // Hide any images that fail to load
       document.querySelectorAll('#page img').forEach(img => {
 img.addEventListener('error', () => {
@@ -1951,5 +2419,127 @@ if (mode === 'full') {
      
      
   </script>
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://threejs.org/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://threejs.org/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://threejs.org/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://threejs.org/examples/js/postprocessing/OutputPass.js"></script>
+  
+  <!-- Shaders for 3D Audio Visualizer -->
+  <script id="vertexshader" type="vertex">
+    vec3 mod289(vec3 x) {
+      return x - floor(x * (1.0 / 289.0)) * 289.0;
+    }
+
+    vec4 mod289(vec4 x) {
+      return x - floor(x * (1.0 / 289.0)) * 289.0;
+    }
+
+    vec4 permute(vec4 x) {
+      return mod289(((x*34.0)+10.0)*x);
+    }
+
+    vec4 taylorInvSqrt(vec4 r) {
+      return 1.79284291400159 - 0.85373472095314 * r;
+    }
+
+    vec3 fade(vec3 t) {
+      return t*t*t*(t*(t*6.0-15.0)+10.0);
+    }
+
+    float pnoise(vec3 P, vec3 rep) {
+      vec3 Pi0 = mod(floor(P), rep);
+      vec3 Pi1 = mod(floor(P) + vec3(1.0), rep);
+      Pi0 = mod289(Pi0);
+      Pi1 = mod289(Pi1);
+      vec3 Pf0 = fract(P);
+      vec3 Pf1 = Pf0 - vec3(1.0);
+      vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
+      vec4 iy = vec4(Pi0.yy, Pi1.yy);
+      vec4 iz0 = vec4(Pi0.z);
+      vec4 iz1 = vec4(Pi1.z);
+
+      vec4 ixy = permute(permute(ix) + iy);
+      vec4 ixy0 = permute(ixy + iz0);
+      vec4 ixy1 = permute(ixy + iz1);
+
+      vec4 gx0 = ixy0 * (1.0 / 7.0);
+      vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;
+      gx0 = fract(gx0);
+      vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
+      vec4 sz0 = step(gz0, vec4(0.0));
+      gx0 -= sz0 * (step(0.0, gx0) - 0.5);
+      gy0 -= sz0 * (step(0.0, gy0) - 0.5);
+
+      vec4 gx1 = ixy1 * (1.0 / 7.0);
+      vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;
+      gx1 = fract(gx1);
+      vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
+      vec4 sz1 = step(gz1, vec4(0.0));
+      gx1 -= sz1 * (step(0.0, gx1) - 0.5);
+      gy1 -= sz1 * (step(0.0, gy1) - 0.5);
+
+      vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
+      vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
+      vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
+      vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
+      vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
+      vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
+      vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
+      vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
+
+      vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
+      g000 *= norm0.x;
+      g010 *= norm0.y;
+      g100 *= norm0.z;
+      g110 *= norm0.w;
+      vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
+      g001 *= norm1.x;
+      g011 *= norm1.y;
+      g101 *= norm1.z;
+      g111 *= norm1.w;
+
+      float n000 = dot(g000, Pf0);
+      float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
+      float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
+      float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
+      float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
+      float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
+      float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
+      float n111 = dot(g111, Pf1);
+
+      vec3 fade_xyz = fade(Pf0);
+      vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
+      vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
+      float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
+      return 2.2 * n_xyz;
+    }
+
+    uniform float u_time;
+    uniform float u_frequency;
+    uniform float u_red;
+    uniform float u_green;
+    uniform float u_blue;
+
+    void main() {
+      float noise = 3.0 * pnoise(position + u_time, vec3(10.0));
+      float displacement = (u_frequency / 30.0) * (noise / 10.0);
+      vec3 newPosition = position + normal * displacement;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+    }
+  </script>
+
+  <script id="fragmentshader" type="fragment">
+    uniform float u_red;
+    uniform float u_green;
+    uniform float u_blue;
+    
+    void main() {
+      gl_FragColor = vec4(vec3(u_red, u_green, u_blue), 1.0);
+    }
+  </script>
+  
 </body>
 </html>
