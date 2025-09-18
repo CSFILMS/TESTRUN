@@ -9,6 +9,10 @@ const CONFIG = {
   correctPassword: 'demo'
 };
 
+// Debug: Log that script is loaded
+console.log('🚀 SCRIPT.JS LOADED - VERSION 3');
+console.log('🎯 Will redirect to DRSEY_PITCHTEXT.html');
+
 // State management
 const state = {
   isAnimating: false,
