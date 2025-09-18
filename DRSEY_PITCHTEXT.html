@@ -378,6 +378,7 @@ z-index: 1;
       font-family: var(--font-family);
       pointer-events: none;
       z-index: 1000;
+      text-transform: uppercase;
     }
     
    /* Side mode: text on left, image on right */
@@ -2203,12 +2204,12 @@ if ((index*chunkSize)>=len){
     let currentFontIndex = 1; // Start with IBM3270 (index 1) as default
     let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
          const fonts = [
-       { family: 'monospace', size: '1.8rem' },
-       { family: 'IBM3270', size: '1.8rem' },  // Increased base size for better readability
-       { family: 'PixelCarnageMono', size: '1.8rem' },
-       { family: 'Crisp', size: '1.8rem' },
-       { family: 'ProggyCleanCE', size: '1.8rem' },
-       { family: 'ProggySquare', size: '1.8rem' }
+       { family: 'monospace', size: '1.2rem' },
+       { family: 'IBM3270', size: '1.2rem' },  // Reduced base size for better fit
+       { family: 'PixelCarnageMono', size: '1.2rem' },
+       { family: 'Crisp', size: '1.2rem' },
+       { family: 'ProggyCleanCE', size: '1.2rem' },
+       { family: 'ProggySquare', size: '1.2rem' }
      ];
     
     function cycleFontForward() {
