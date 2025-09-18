@@ -109,8 +109,8 @@ rgba(0, 255, 0, 0.03) 4px
       height: 100vh;
       background: repeating-linear-gradient(
 0deg,
-rgba(0, 0, 0, 0.20) 0px,
-rgba(0, 0, 0, 0.20) 2px,
+rgba(0, 0, 0, 0.26) 0px,
+rgba(0, 0, 0, 0.26) 2px,
 transparent 2px,
 transparent 4px
       );
@@ -169,19 +169,25 @@ right: 2vw;
  /* Simple image display */
      #page img {
        display: none;
-       filter: brightness(0.7) sepia(1) hue-rotate(60deg) saturate(1.5); /* Default: full green overlay - original brightness */
+       filter: grayscale(1) brightness(0.64) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(2);
+       /* Grayscale + green tint: black stays black, white becomes green */
        /* Ensure all image formats including GIFs display properly */
        image-rendering: auto;
      }
      
    /* Special rule: dim only photo7 */
       #page img[id="img-7"] {
-filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo7 dimmed as requested */
+filter: grayscale(1) brightness(0.32) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(2);
       }
       
       /* Special rule: dim only photo23 */
       #page img[id="img-23"] {
-filter: brightness(0.3) sepia(1) hue-rotate(60deg) saturate(1.5); /* Photo23 dimmed as requested */
+filter: grayscale(1) brightness(0.32) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(2);
+      }
+      
+      /* Special rule: make page 10 images darker */
+      #page img[id^="img-10"] {
+filter: grayscale(1) brightness(0.35) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(2);
       }
     
     #page img.show-bg {
@@ -258,7 +264,7 @@ z-index: 1;
      }
                     #unscramble { 
       white-space: pre-wrap; 
-      font-size: 1.1rem;
+      font-size: 0.99rem;
       line-height: 1.5;
       word-wrap: break-word;
       overflow-wrap: break-word;
@@ -383,12 +389,48 @@ z-index: 2 !important;
       font-size: 1.0rem !important;
       line-height: 1.3 !important;
     }
+    
+    /* Collateral Murder video slide animation */
+    #unscramble.collateral-murder-slide {
+      animation: moveUpwards 3s ease-out forwards;
+      position: relative;
+      z-index: 10;
+    }
+    
+    @keyframes moveUpwards {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-50vh);
+      }
+    }
+    
+    /* Persistent text that stays on screen */
+    #persistent-text {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 1000;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 2rem;
+    }
+    
+    #persistent-text .text-content {
+      color: var(--accent);
+      font-family: var(--font-family);
+      font-size: 2rem;
+      text-align: center;
+      font-weight: bold;
+      text-shadow: 0 0 10px var(--accent);
+    }
      
-     /* Special rule: make slide 11 text slightly smaller to prevent navbar overlap */
-     #page[data-page="11"] #unscramble {
-       font-size: 1.0rem !important;
-       line-height: 1.3 !important;
-     }
+
   </style>
 </head>
 <body>
@@ -417,7 +459,276 @@ z-index: 2 !important;
   <div id="custom-cursor"></div>
 
   <script>
-    /* ================== AUDIO SYSTEM WITH DEBUG ================== */
+    /* ================== CONTENT ================== */
+    const fullTextRaw = `
+RECIPIENT: DORSEY 
+DISSEMINTATION: EYES ONLY
+
+NO FWD / NO DSTR
+
+ORIGINATOR: CSF
+FILE ID: 369-108-111
+
+
+
+
+
+
+THE SIX BILLION DOLLAR MAN
+
+
+PRESS [F] FOR FULLSCREEN
+
+
+
+
+
+
+
+A FILM BY EUGENE JARECKI
+
+
+
+
+
+
+ASSANGE’S STORY IS THAT OF A RELENTLESS FIGHT AGAINST THOSE IN POWER
+
+THOSE WHO WANTS JOURNALISTS TO FEAR TELLING THE TRUTH
+
+AND FOR PEOPLE TO REMAIN IGNORANT TO HOW THE WORLD IS RUN
+
+
+
+
+
+
+THIS DOCUMENTARY FEATURES UNSEEN FOOTAGE OF JULIAN ASSANGE AND THE WIKILEAKS TEAM
+
+AS WELL AS INTERVIEWS WITH KEY EXPERTS AND FIRST HAND WITNESSESS
+
+TO SHOW YOU WHAT REALLY HAPPENED
+
+
+
+
+You may think you know the story
+
+
+    
+
+
+
+
+
+you don’t
+
+
+
+
+
+Much of what has passed for facts in the mainstream narrative came out of boardrooms filled with experts in distorting narratives
+
+
+In one episode of headlines and broken police protocol a folk hero became a despised abuser
+
+
+
+
+
+
+WikiLeaks, once a global lightning rod, has been buried beneath the churn of 24/7 news and state-sanctioned amnesia
+
+But the mechanisms Assange exposed 
+
+	> surveillance
+	> secrecy
+	> impunity 
+
+are only getting stronger
+
+
+
+
+
+WikiLeaks built a secure publishing platform that bypassed traditional media gatekeepers 
+
+
+It published the infamous Collateral Murder video in 2010
+
+
+
+
+
+followed by the Afghan and Iraq War Logs, and the Cablegate diplomatic archives
+
+
+and in doing so they changed public perception on
+
+	> war
+	> diplomacy
+	> power
+
+In the process, Assange became both symbol and target.
+
+
+
+
+
+Spied on by the CIA for years while under house arrest in an embassy flat
+
+Sold out by Lenin Moreno for 6 Billion dollars in an IMF loan
+
+held in isolation for years in the UK's highest security prison
+
+Indicted under the Espionage act, a historic first for a publisher, he only gained his release through a plea deal 
+
+
+He has paid the price for publishing
+
+
+
+
+In 2010, WikiLeaks was financially blacklisted by 
+
+> Visa
+> Mastercard
+> PayPal
+
+Cryptocurrency is what held the organisation afloat when traditional channels were blocked
+
+
+
+
+
+
+
+"Bitcoin is the real Occupy Wall Street," 
+                -Julian Assange
+
+
+Early BTC donations helped WikiLeaks survive.
+
+The Cypherpunk roots of Bitcoin and WikiLeaks are the same: 
+
+        > privacy
+        > decentralisation
+        > freedom
+
+AssangeDAO (2022) raised $53M in a week for Assange’s legal defense.
+
+
+
+
+
+
+Our film challenges entrenched narratives. 
+
+We have already met resistance in traditional media channels.
+
+Corporate platforms benefit from a distracted audience and a discredited Assange.
+
+We need decentralised support to bypass censorship and algorithmic throttling.
+
+You know the architecture of silence. 
+
+
+Help us break it.
+
+
+
+
+
+
+		What We're Asking
+
+
+> Initial crypto contribution to fund 
+
+	> distribution
+	> promotion
+	> an impact campaign
+
+> Public endorsement (if desired) to galvanise the broader crypto sphere.
+
+> Strategic guidance or connection to Bitcoin-aligned distribution tools.
+
+
+
+
+
+
+
+		Use of Funds
+
+
+> Academy screenings and crypto-native distribution 
+	(NFT access passes, decentralised streaming)
+
+> Legal and security support for contributors in high-risk zones
+
+> Aggressive promotional push now that Assange is free and public attention is resurgent
+
+
+
+
+
+
+
+
+		Transparency guaranteed: 
+
+> funds held in multi-sig wallet with real-time public ledger.
+
+
+
+
+
+
+
+		Why You?
+
+
+Your voice has stood consistently for decentralisation, free speech, and Bitcoin as resistance. 
+
+You understand that speech without infrastructure is performative. 
+
+Assange’s prosecution is a prosecution of infrastructure: 
+        
+	> publishing
+	> cryptography
+	> financial independence
+
+
+
+
+Supporting this film continues the work you’ve always done.
+
+The crypto community, the network that kept Assange alive 
+
+can now ensure he’s not erased.
+
+
+
+
+
+
+
+Let’s finish what we started.
+
+
+
+
+
+
+
+Contact:
+[Producers' Names]
+[Secure Email]
+[Wallet Address (BTC/ETH)]
+`;
+
+    /* ================== AUDIO SYSTEM ================== */
     let audioContext = null;
     let audioEnabled = true;
     let debugMode = true;
@@ -481,8 +792,6 @@ z-index: 2 !important;
       }
       
       try {
-        if (debugMode) console.log(`🎵 Playing beep: ${frequency}Hz, ${duration}s, vol:${volume}`);
-        
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
         
@@ -720,342 +1029,6 @@ z-index: 2 !important;
       }
     }
 
-    
-    
-    // Show temporary message
-    function showTemporaryMessage(message) {
-      const navMsg = document.getElementById('nav-msg');
-      if (navMsg) {
-        const originalText = navMsg.textContent;
-        const originalVisibility = navMsg.style.visibility;
-        
-        navMsg.textContent = message;
-        navMsg.style.visibility = 'visible';
-        navMsg.style.color = '#00FF00';
-        
-        setTimeout(() => {
-          navMsg.textContent = originalText;
-          navMsg.style.visibility = originalVisibility;
-          navMsg.style.color = '';
-        }, 2000);
-      }
-    }
-
-    /* ================== SIMPLE AUDIO + VISUAL WAVEFORM ================== */
-    function startAudio() {
-      console.log('🎵 Starting audio with visual waveform...');
-      
-      // Hide text first
-      const textWrap = document.getElementById('text-wrap');
-      if (textWrap) textWrap.style.display = 'none';
-      
-      // Create simple audio element (NO Web Audio API)
-      const audio = document.createElement('audio');
-      audio.src = 'AUDIO/Varoufakis - deal 6 Billion Dollars.mp3';
-      audio.autoplay = true;
-      audio.volume = 0.8;
-      audio.style.display = 'none';
-      document.body.appendChild(audio);
-      
-      // Create visual waveform (completely separate from audio)
-      createVisualWaveform();
-      
-      // Play audio
-      audio.play().then(() => {
-        console.log('🎵 Audio playing successfully');
-        startVisualWaveform();
-      }).catch(e => {
-        console.log('🎵 Auto-play failed, trying with user gesture');
-        setTimeout(() => {
-          audio.play().then(() => {
-            startVisualWaveform();
-          }).catch(err => {
-            console.log('🎵 Audio play failed:', err);
-          });
-        }, 100);
-      });
-    }
-    
-    function createVisualWaveform() {
-      const canvas = document.createElement('canvas');
-      canvas.style.cssText = `
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        height: 25vh;
-        background: transparent;
-        z-index: 10;
-      `;
-      
-      canvas.width = window.innerWidth * 0.9;
-      canvas.height = window.innerHeight * 0.25;
-      
-      const ctx = canvas.getContext('2d');
-      document.getElementById('page').appendChild(canvas);
-      
-      // Store for animation
-      window.visualCanvas = canvas;
-      window.visualCtx = ctx;
-    }
-    
-    function startVisualWaveform() {
-      if (!window.visualCanvas || !window.visualCtx) return;
-      
-      const canvas = window.visualCanvas;
-      const ctx = window.visualCtx;
-      
-      // Simulate realistic speech waveform patterns
-      function drawSpeechWaveform() {
-        const width = canvas.width;
-        const height = canvas.height;
-        const time = Date.now() * 0.001;
-        
-        ctx.clearRect(0, 0, width, height);
-        ctx.strokeStyle = '#00FF00';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        
-        for (let x = 0; x < width; x += 2) {
-          const progress = x / width;
-          
-          // Simulate speech patterns with multiple frequency components
-          const speech = 
-            Math.sin(progress * 30 + time * 2) * 0.4 +           // Main speech frequency
-            Math.sin(progress * 60 + time * 3.2) * 0.25 +        // Higher harmonics
-            Math.sin(progress * 15 + time * 1.1) * 0.2 +         // Lower formants
-            (Math.random() - 0.5) * 0.1;                         // Noise/texture
-          
-          // Simulate speech envelope (louder and quieter periods)
-          const envelope = 
-            0.7 + 0.3 * Math.sin(time * 0.8) +                   // Slow volume changes
-            0.2 * Math.sin(time * 2.3) +                         // Faster variations
-            0.1 * Math.sin(time * 4.7);                          // Quick fluctuations
-          
-          const amplitude = Math.max(0.1, envelope) * 60;
-          const y = height / 2 + speech * amplitude;
-          
-          if (x === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        
-        ctx.stroke();
-        requestAnimationFrame(drawSpeechWaveform);
-      }
-      
-      drawSpeechWaveform();
-      console.log('🎵 Visual waveform started');
-    }
-    
-
-    /* ================== CONTENT ================== */
-    const fullTextRaw = `THE SIX BILLION DOLLAR MAN
-
-
-PRESS [F] FOR FULLSCREEN
-
-
-
-
-
-
-
-A FILM BY EUGENE JARECKI
-
-
-
-
-
-OUR WORLD IS AT WAR, AS IT ALWAYS HAS BEEN
-
-BUT PERHAPS THE MOST INFLUENTIAL WAR BEING WAGED
-IS THE WAR OF INFORMATION
-
-
-
-
-
-
-COGNITIVE WARFARE HAS BECOME THE WAY FOR FASCISTS TO CONSOLIDATE THEIR POWER THROUGH
-
-	>	OBSCURITY
-	>	CENSORSHIP
-	>	DISINFORMATION
-	>	SURVEILLANCE
-
-
-
-
-
-
-YOU KNOW THIS, HAVING PLAYED A HUGE PART ON BEHALF OF THE RESISTANCE TO SURVEILLANCE CAPITALISM THROUGH YOUR INVOLVEMENT WITH THE CYPHERPUNK MOVEMENT.
-
-    >   NOSTR
-    >   BITCOIN
-    >   BLUESKY
-    >   WEB3
-
-
-
-    
-OUR FILM FOCUSES ON ANOTHER BIG PLAYER IN THE WAR, A MAN WHO SHARES YOUR ROOTS IN THE CYPHERPUNK MOVEMENT,
-		
-	> JULIAN ASSANGE, THE FOUNDER OF WIKILEAKS
-
-
-
-
-
-
-ONCE LAUDED AS A FOLK HERO FOR EXPOSING WAR CRIMES AND CORRUPTION
-
-HIS REPUTATION WAS SUCCESSFULLY ASSASINATED BY U.S.A. AND U.K. MEDIA CONTROL
-
-
-
-
-
-
-
-IMPRISONED, SPIED ON, TORTURED, ASSANGE WAS USED TO SET AN EXAMPLE TO THOSE WHO MIGHT DARE TO CHALLENGE THE LIES AND SECRECY OF THE EMPIRE
-
-
-
-
-
-FEATURING EXCLUSIVE ACCESS TO FOOTAGE DIRECTLY FROM THE WIKILEAKS TEAM 
-
-AS WELL AS INTERVIEWS WITH EXPERTS, WIKILEAKS STAFF, LOVED ONES,
-
-AND A WHISTLEBLOWER FROM THE ORGANISATION THE CIA HIRED TO SPY ON THEM
-
-
-
-
-
-WE TELL THE TRUE STORY OF HOW WIKILEAKS USED INFORMATION 
-
-	>	TO BRING DOWN CORRUPT REGIMES
-
-	>	TO EXPOSE GOVERNMENT CORRUPTION AND DEMOCRATIC INTERFERENCE
-
-	>	TO HELP END WARS
-
-
-
-
-
-
-
-AND TO SHOW HOW THE PEOPLE FAUGHT FOR HIS RELEASE, AGAINST THE MOST POWERFUL GOVERNMENTS OF THE WORLD,
-
-		AND WON.
-
-
-
-
-
-
-WHEN MAINSTREAM FINANCIAL INSTITUTIONS CAVED TO GOVERNMENT PRESSURES DURING THE BANKING BLOCKADE ON WIKILEAKS
-
-THE ORGANISATION SURVIVED THROUGH BITCOIN DONATIONS
-
-
-
-
-
-
-WHEN MAINSTREAM MEDIA BROADCASTED LIES TO SLANDER HIM,
-
-THE PEOPLE COULD FIND THE TRUTH ONLINE ON DECENTRALISED MEDIA PLATFORMS
-
-
-
-
-
-JULIAN ASSANGE WAS MEANT TO SHOW JOURNALISTS THAT TO OPPOSE THEM MEANS DEATH AND DEFEAT
-
-WE WANT THE PEOPLE TO KNOW THAT THIS IS A LIE
-
-THOSE IN POWER ARE NOT UNTOUCHABLE
-
-THAT THERE IS A WAR WE'RE ALL A PART OF AND WHICH ALL OF US HAVE A DUTY TO FIGHT
-
-
-
-
-WE HAVE ALREADY MET RESISTANCE IN TRADITIONAL MEDIA CHANNELS
-
-EVEN AFTER OUR PREMIERE AT CANNES FILM FESTIVAL AND SEVERAL AWARDS EARNED, THE MAINSTREAM MEDIA IS RELUCTANT TO STAND AGAINST THE GOVERNMENT 
-
-CORPORATE PLATFORMS BENEFIT FROM A DISTRACTED AUDIENCE AND A DISCREDITED ASSANGE
-
-THE WORLD BENEFITS FROM THE TRUTH
-
-
-
-
-					WHAT WE'RE ASKING
-
-
-> INITIAL CRYPTO CONTRIBUTION TO FUND 
-		
-	>	DISTRIBUTION, 
-	>	PROMOTION,
-	>	AND AN IMPACT CAMPAIGN
-
-> PUBLIC ENDORSEMENT (IF DESIRED) TO GALVANISE THE BROADER CRYPTO SPHERE
-
-> STRATEGIC GUIDANCE OR CONNECTION TO BITCOIN-ALIGNED DISTRIBUTION TOOLS
-		
-
-
-
-
-					USE OF FUNDS
-
-
-> ACADEMY SCREENINGS AND CRYPTO-NATIVE DISTRIBUTION 
-        (NFT ACCESS PASSES, DECENTRALISED STREAMING)
-
-> LEGAL AND SECURITY SUPPORT FOR CONTRIBUTORS IN HIGH-RISK ZONES
-
-> AGGRESSIVE PROMOTIONAL PUSH NOW THAT ASSANGE IS FREE AND PUBLIC ATTENTION IS RESURGENT
-
-> TRANSPARENCY GUARANTEED: 
- 	FUNDS HELD IN MULTI-SIG WALLET WITH REAL-TIME PUBLIC LEDGER
-
-
-
-
-
-WE'RE UP AGAINST ENTRENCHED NARRATIVES AND OPPOSITION TO THE TRUTH
-
-YOU CAN HELP US MAKE A DIFFERENCE, BYPASSING ATTEMPTS AT CENSORSHIP TO GET THIS FILM IN FRONT OF AN AUDIENCE
-
-
-
-
-
-
-
-LET'S FINISH WHAT WE STARTED.
-
-CONTACT:
-[PRODUCERS' NAMES]
-[SECURE EMAIL]
-[WALLET ADDRESS (BTC/ETH)]
-
-
-
-
-
-`;
-
     /* ================== PREP ================== */
     const fullText = fullTextRaw.toUpperCase();
     const pages = fullText.split(/\n{4,}/);
@@ -1122,15 +1095,47 @@ console.warn('Could not load image modes from localStorage:', e);
       }
     }
     
- const pageModes = new Array(pages.length).fill(IMG_OFF); // Default to no image mode for all pages
+ const pageModes = new Array(pages.length).fill(IMG_BG); // Default to background image mode for all pages
+    
     
     // Load saved image modes from localStorage
     loadPageModesFromStorage();
     
-    // All pages start with IMG_OFF and auto-detect images
-     
-     // Auto-detect pages with images and set them to side mode
-     // This will be handled dynamically when images are found
+    // Initialize keyword scanning
+    scanAvailableKeywords().then(() => {
+      console.log('Keyword scanning complete, starting presentation...');
+      
+      // Direct test of photo_ignorant.webp
+      console.log('🔍 Direct test: Creating photo_ignorant.webp image...');
+      const testImg = document.createElement('img');
+      testImg.src = 'photos/photo_ignorant.webp';
+      testImg.onload = () => {
+        console.log('✅ Direct test: photo_ignorant.webp loaded successfully!');
+        availableKeywords.add('ignorant');
+        console.log('Added "ignorant" to available keywords');
+      };
+      testImg.onerror = () => {
+        console.log('❌ Direct test: photo_ignorant.webp failed to load');
+      };
+      
+      startPage(0);
+    });
+    
+    // Debug function - call from browser console: testImage('ignorant')
+    window.testImage = function(keyword) {
+      console.log(`Testing image for keyword: ${keyword}`);
+      const img = document.createElement('img');
+      img.src = `photos/photo_${keyword}.webp`;
+      img.onload = () => {
+        console.log(`✅ Image loaded: photos/photo_${keyword}.webp`);
+        availableKeywords.add(keyword);
+        console.log('Available keywords:', Array.from(availableKeywords));
+      };
+      img.onerror = () => {
+        console.log(`❌ Image failed: photos/photo_${keyword}.webp`);
+      };
+    };
+    
 
     // DOM
     const pageEl = document.getElementById('page');
@@ -1143,6 +1148,97 @@ console.warn('Could not load image modes from localStorage:', e);
     let currentPage = 0;
     let isAnimating = false;
     let currentInterval = null;
+    let availableKeywords = new Set(); // Store available photo keywords
+
+    // Test if a specific photo file exists
+    function testPhotoExists(keyword, format) {
+      return new Promise((resolve) => {
+        const testImg = new Image();
+        const timeout = setTimeout(() => {
+          resolve(false);
+        }, 1000);
+        
+        testImg.onload = () => {
+          clearTimeout(timeout);
+          resolve(true);
+        };
+        testImg.onerror = () => {
+          clearTimeout(timeout);
+          resolve(false);
+        };
+        testImg.src = `photos/photo_${keyword}.${format}`;
+      });
+    }
+
+    // Scan photos folder to find available photo_keyword files
+    async function scanAvailableKeywords() {
+      const formats = ['webp', 'jpg', 'jpeg', 'png', 'gif'];
+      const keywords = new Set();
+      
+      // Common keywords to test based on the content
+      const testKeywords = [
+        'ignorant', 'assange', 'wikileaks', 'bitcoin', 'crypto', 'cryptocurrency', 'blockchain',
+        'surveillance', 'privacy', 'freedom', 'journalism', 'truth', 'transparency',
+        'government', 'state', 'power', 'control', 'censorship', 'propaganda',
+        'war', 'military', 'diplomacy', 'leaks', 'documents', 'secrets',
+        'collateral', 'murder', 'video', 'footage', 'evidence',
+        'prosecution', 'trial', 'prison', 'embassy', 'asylum', 'extradition',
+        'moreno', 'ecuador', 'britain', 'america', 'cia', 'fbi', 'nsa',
+        'cypherpunk', 'anonymity', 'encryption', 'decentralization', 'resistance',
+        'activist', 'whistleblower', 'expose', 'revelation', 'scandal', 'corruption'
+      ];
+      
+      console.log('Scanning for available photo keywords...');
+      
+      // First, test photo_ignorant.webp specifically
+      console.log('🔍 Testing photo_ignorant.webp specifically...');
+      const ignorantExists = await testPhotoExists('ignorant', 'webp');
+      console.log(`photo_ignorant.webp exists: ${ignorantExists}`);
+      
+      // Test each keyword with each format
+      for (const keyword of testKeywords) {
+        let found = false;
+        for (const format of formats) {
+          const exists = await testPhotoExists(keyword, format);
+          if (exists) {
+            keywords.add(keyword);
+            console.log(`✅ Found: photo_${keyword}.${format}`);
+            found = true;
+            break; // Found this keyword, move to next
+          } else {
+            console.log(`❌ Not found: photo_${keyword}.${format}`);
+          }
+        }
+        if (!found) {
+          console.log(`❌ No photo found for keyword: ${keyword}`);
+        }
+      }
+      
+      availableKeywords = keywords;
+      
+      // Manual override for testing - force add "ignorant" if it exists
+      const ignorantTest = await testPhotoExists('ignorant', 'webp');
+      if (ignorantTest) {
+        availableKeywords.add('ignorant');
+        console.log('✅ Manually added "ignorant" to available keywords');
+      }
+      
+      console.log(`Available photo keywords:`, Array.from(keywords));
+      return keywords;
+    }
+
+    // Extract keywords from page text that have corresponding photo files
+    function extractKeywords(pageText) {
+      // Convert to lowercase and extract meaningful words
+      const words = pageText.toLowerCase()
+        .replace(/[^\w\s]/g, ' ') // Remove punctuation
+        .split(/\s+/)
+        .filter(word => word.length > 3) // Only words longer than 3 characters
+        .filter(word => !['that', 'this', 'with', 'from', 'they', 'have', 'been', 'were', 'said', 'will', 'would', 'could', 'should', 'about', 'above', 'below', 'under', 'over', 'through', 'during', 'before', 'after', 'while', 'since', 'until', 'unless', 'because', 'although', 'though', 'however', 'therefore', 'moreover', 'furthermore', 'nevertheless', 'nonetheless'].includes(word)) // Filter out common words
+        .filter(word => availableKeywords.has(word)); // Only return words that have corresponding photo files
+      
+      return [...new Set(words)]; // Remove duplicates
+    }
 
     // Simple image function - check what photos actually exist
     function showImage(pageIndex) {
@@ -1154,17 +1250,35 @@ img.className = '';
       const pageNumber = pageIndex + 1;
       let imgEl = document.getElementById(`img-${pageNumber}`);
       
-      // If no image exists for this page yet, try to create one
+      // If no image exists for this page yet, try to create one (original system)
       if (!imgEl) {
 imgEl = createImageForPage(pageNumber);
       }
       
-     // Show image if it exists - auto-set mode if needed
+      // Also try keyword-based matching as fallback
+      if (!imgEl) {
+        const pageText = pages[pageIndex];
+        const keywords = extractKeywords(pageText);
+        console.log(`Page ${pageIndex + 1} text preview:`, pageText.substring(0, 100) + '...');
+        console.log(`Page ${pageIndex + 1} available keywords:`, Array.from(availableKeywords));
+        console.log(`Page ${pageIndex + 1} matched keywords:`, keywords);
+        
+        for (const keyword of keywords) {
+          console.log(`🔍 Creating new image for keyword: ${keyword}`);
+          imgEl = createImageForKeyword(keyword);
        if (imgEl) {
- // Only auto-set to SIDE mode if this is the first time and user hasn't manually set a mode
- if (pageModes[pageIndex] === IMG_OFF && !imgEl.hasAttribute('data-user-set')) {
-   pageModes[pageIndex] = IMG_SIDE;
- }
+            console.log(`✅ Created image for keyword: ${keyword}`);
+            break;
+          }
+        }
+      }
+      
+      if (!imgEl) {
+        console.log(`❌ No image found for page ${pageIndex + 1}`);
+      }
+      
+     // Show image if it exists
+       if (imgEl) {
  
  const mode = pageModes[pageIndex];
  if (mode === IMG_BG) imgEl.className = 'show-bg';
@@ -1181,50 +1295,6 @@ adjustTextContainerWidth(IMG_OFF);
       }
     }
     
-    // Create image for a page number - tries multiple formats
-    function createImageForPage(pageNumber) {
-      const img = document.createElement('img');
-      img.id = `img-${pageNumber}`;
-      img.alt = `Page ${pageNumber} Image`;
-      
-      // Start invisible - only show when successfully loaded
-      img.style.opacity = '0';
-      img.style.transition = 'opacity 0.2s ease-in-out';
-      
-      // Add to page first (invisible)
-      document.getElementById('page').appendChild(img);
-      
-      // Try multiple formats in order
-      tryImageFormats(img, pageNumber, 0);
-      
-      // Only show image when it loads successfully
-      img.addEventListener('load', () => {
-console.log(`Image loaded successfully for page ${pageNumber}`);
-img.style.opacity = '1';
-
-// Update page mode and layout if this is the current page
-const pageIndex = pageNumber - 1;
-if (pageIndex === currentPage) {
-  // Only auto-set to SIDE mode on first load, don't override user choices
-  if (pageModes[pageIndex] === IMG_OFF && !img.hasAttribute('data-user-set')) {
-    pageModes[pageIndex] = IMG_SIDE;
-  }
-  adjustTextContainerWidth(pageModes[pageIndex]);
-}
-
-// Apply current overlay mode to new image
-applyOverlayToImage(img, currentOverlayMode);
-      });
-      
-      // Handle image loading errors gracefully
-      img.addEventListener('error', () => {
-console.log(`Failed to load image for page ${pageNumber}`);
-img.style.display = 'none';
-// Don't remove the image element - just hide it
-      });
-      
-      return img;
-    }
     
     // Adjust text container when side image is active
     function adjustTextForSideImage() {
@@ -1269,64 +1339,235 @@ img.style.display = 'none';
     }
     
     
+    // Create image for a page number - tries multiple formats and naming patterns
+    function createImageForPage(pageNumber) {
+      const img = document.createElement('img');
+      img.id = `img-${pageNumber}`;
+      img.alt = `Page ${pageNumber} Image`;
+      
+      // Start invisible - only show when successfully loaded
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.2s ease-in-out';
+      
+      // Add to page first (invisible)
+      document.getElementById('page').appendChild(img);
+      
+      // Try to find any image that starts with the page number
+      findImageForPage(img, pageNumber);
+      
+      // Only show image when it loads successfully
+      img.addEventListener('load', () => {
+        console.log(`Image loaded successfully for page ${pageNumber}`);
+        img.style.opacity = '0.765';
+
+        // Update page mode and layout if this is the current page
+        const pageIndex = pageNumber - 1;
+        if (pageIndex === currentPage) {
+          adjustTextContainerWidth(pageModes[pageIndex]);
+        }
+
+        // Apply current overlay mode to new image
+        applyOverlayToImage(img, currentOverlayMode);
+      });
+      
+      // Handle image loading errors gracefully
+      img.addEventListener('error', () => {
+        console.log(`Failed to load image for page ${pageNumber}`);
+        img.style.display = 'none';
+      });
+      
+      return img;
+    }
     
-    // Universal image support - tries all possible formats
-    function tryImageFormats(img, pageNumber, formatIndex) {
-      // Start with most compatible formats, then try everything else
-      const formats = [
-'jpg', 'jpeg', 'png', 'gif',  // Universal support
-'webp', 'svg',// Modern browsers
-'bmp', 'tiff', 'tif', // Desktop browsers
-'avif', 'jfif', 'pjpeg'       // Newer formats
+    // Find any image that starts with the page number
+    function findImageForPage(img, pageNumber) {
+      const formats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif', 'avif', 'jfif', 'pjpeg'];
+      
+      // Try different naming patterns for this page number
+      const namingPatterns = [
+        `photo${pageNumber}`,           // photo10.jpg
+        `picture${pageNumber}`,         // picture10.jpg
+        `photo${pageNumber}_collateral`, // photo10_collateral.jpg
+        `picture${pageNumber}_collateral`, // picture10_collateral.jpg
+        `photo${pageNumber}_`,          // photo10_anything.jpg
+        `picture${pageNumber}_`         // picture10_anything.jpg
       ];
       
-      if (formatIndex >= formats.length) {
-// All formats failed, remove the image
-console.log(`No image found for page ${pageNumber}`);
-img.remove();
-return;
+      // Try each naming pattern with each format
+      for (const pattern of namingPatterns) {
+        for (const format of formats) {
+          const testSrc = `photos/${pattern}.${format}`;
+          const testImg = new Image();
+          
+          testImg.onload = function() {
+            console.log(`✅ Found working image: ${testSrc}`);
+            img.src = testSrc;
+            return; // Stop trying once we find one
+          };
+          
+          testImg.onerror = function() {
+            // Continue trying other patterns/formats
+          };
+          
+          testImg.src = testSrc;
+        }
       }
       
-      const format = formats[formatIndex];
-      const testSrc = `photos/photo${pageNumber}.${format}`;
+      // If no specific pattern worked, try a more general approach
+      // This will try to find any file that starts with the page number
+      setTimeout(() => {
+        if (!img.src) {
+          console.log(`Trying general search for page ${pageNumber}...`);
+          tryGeneralImageSearch(img, pageNumber, formats);
+        }
+      }, 100);
+    }
+    
+    // Try to find any image file that starts with the page number
+    function tryGeneralImageSearch(img, pageNumber, formats) {
+      // Common prefixes to try
+      const prefixes = ['photo', 'picture', 'img', 'image'];
       
-      // Test if this format file exists by creating a test image
-      const testImg = new Image();
-      testImg.onload = function() {
-// File exists and format is supported - use it!
-console.log(`✅ Found working image: ${testSrc}`);
-img.src = testSrc;
-      };
-      testImg.onerror = function() {
-// This format/file doesn't work, try next
-tryImageFormats(img, pageNumber, formatIndex + 1);
-      };
-      testImg.src = testSrc;
+      for (const prefix of prefixes) {
+        for (const format of formats) {
+          // Try exact match first
+          const exactSrc = `photos/${prefix}${pageNumber}.${format}`;
+          const testImg = new Image();
+          
+          testImg.onload = function() {
+            console.log(`✅ Found working image (exact): ${exactSrc}`);
+            img.src = exactSrc;
+            return;
+          };
+          
+          testImg.onerror = function() {
+            // Try with underscore and common suffixes
+            const suffixes = ['_collateral', '_murder', '_video', '_footage', '_evidence'];
+            for (const suffix of suffixes) {
+              const suffixSrc = `photos/${prefix}${pageNumber}${suffix}.${format}`;
+              const suffixTestImg = new Image();
+              
+              suffixTestImg.onload = function() {
+                console.log(`✅ Found working image (with suffix): ${suffixSrc}`);
+                img.src = suffixSrc;
+                return;
+              };
+              
+              suffixTestImg.onerror = function() {
+                // Continue trying
+              };
+              
+              suffixTestImg.src = suffixSrc;
+            }
+          };
+          
+          testImg.src = exactSrc;
+        }
+      }
     }
 
-      /* ================== TEXT TRUNCATION ================== */
+    // Create image for keyword-based matching
+    function createImageForKeyword(keyword) {
+      const img = document.createElement('img');
+      img.id = `img-${keyword}`;
+      img.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+      `;
+      
+      // Try different image formats for the keyword
+      tryImageFormats(img, keyword, 0);
+      
+      // Only show image when it loads successfully
+      img.addEventListener('load', () => {
+        console.log(`Image loaded successfully for keyword: ${keyword}`);
+        img.style.opacity = '0.765';
+
+        // Update page mode and layout if this is the current page
+        const pageIndex = currentPage;
+        if (pageIndex === currentPage) {
+          adjustTextContainerWidth(pageModes[pageIndex]);
+        }
+
+        // Apply current overlay mode to new image
+        applyOverlayToImage(img, currentOverlayMode);
+      });
+
+      // Handle image loading errors gracefully
+      img.addEventListener('error', () => {
+        console.log(`Failed to load image for keyword: ${keyword}`);
+        img.style.display = 'none';
+      });
+
+      return img;
+    }
+
+
+         // Universal image support - tries all possible formats
+     function tryImageFormats(img, keyword, formatIndex) {
+       
+       // Start with most compatible formats, then try everything else
+       const formats = [
+ 'jpg', 'jpeg', 'png', 'gif',  // Universal support
+ 'webp', 'svg',// Modern browsers
+ 'bmp', 'tiff', 'tif', // Desktop browsers
+ 'avif', 'jfif', 'pjpeg'       // Newer formats
+       ];
+       
+       if (formatIndex >= formats.length) {
+ // All formats failed, remove the image
+ console.log(`No image found for keyword '${keyword}'`);
+ img.remove();
+ return;
+       }
+       
+       const format = formats[formatIndex];
+       const testSrc = `photos/photo_${keyword}.${format}`;
+       
+       // Test if this format file exists by creating a test image
+       const testImg = new Image();
+       testImg.onload = function() {
+ // File exists and format is supported - use it!
+ console.log(`✅ Found working image: ${testSrc}`);
+ img.src = testSrc;
+       };
+       testImg.onerror = function() {
+ // This format/file doesn't work, try next
+ tryImageFormats(img, keyword, formatIndex + 1);
+       };
+       testImg.src = testSrc;
+     }
+
+    /* ================== SIMPLE TEXT SIZING ================== */
       function truncateTextToFit(element, text) {
 element.textContent = text;
 
-// Get the text container to check available space
+      // Simple approach: just ensure text fits without complex calculations
 const textWrap = document.getElementById('text-wrap');
 const availableHeight = textWrap ? textWrap.clientHeight : element.clientHeight;
 
-// Only reduce font size if absolutely necessary, and be more conservative
+      // Only adjust if text overflows
 if (element.scrollHeight > availableHeight) {
   let fontSize = parseFloat(getComputedStyle(element).fontSize);
   
-  // Reduce font size more conservatively
-  while (element.scrollHeight > availableHeight && fontSize > 1.2) {
-    fontSize -= 0.05;
+        // Reduce font size gradually until it fits
+        while (element.scrollHeight > availableHeight && fontSize > 1.0) {
+          fontSize -= 0.1;
     element.style.fontSize = fontSize + 'rem';
   }
   
-  // If still doesn't fit, add some padding to prevent navbar overlap
+        // If still doesn't fit, add padding
   if (element.scrollHeight > availableHeight) {
     element.style.paddingBottom = '2rem';
   }
-}
+        }
       }
 
     /* ================== SCRAMBLE ================== */
@@ -1339,7 +1580,7 @@ currentInterval = null;
       let index = 0, chunkSize = 15, scrambled = text.split(''), len = text.length;
       for (let i=0;i<len;i++) scrambled[i] = /\s/.test(text[i]) ? text[i] : chars[Math.floor(Math.random()*chars.length)];
       isAnimating = true; promptElem.style.visibility='hidden'; navMsg.style.visibility='hidden';
-      
+
       // Calculate total chunks for audio sync
       const totalChunks = Math.ceil(len / chunkSize);
       
@@ -1364,57 +1605,102 @@ if ((index*chunkSize)>=len){
   currentInterval = null;
   truncateTextToFit(element, text);
   isAnimating=false;
+  
+  // Only show "PRESS SPACEBAR TO CONTINUE" for first 2 pages
+  if (currentPage < 2) {
   navMsg.textContent='PRESS SPACEBAR TO CONTINUE';
   navMsg.style.visibility='visible';
+  }
+  
   onComplete && onComplete();
 }
-      },80);
+      },100);
     }
 
-    /* ================== PAGE RENDER ================== */
- function startPage(pageIndex){
-       if (pageIndex >= pages.length) pageIndex = 0;
-       if (pageIndex < 0) pageIndex = pages.length - 1;
-       currentPage = pageIndex;
+         /* ================== PAGE RENDER ================== */
+  function startPage(pageIndex){
+        if (pageIndex >= pages.length) pageIndex = 0;
+        if (pageIndex < 0) pageIndex = pages.length - 1;
+        currentPage = pageIndex;
+        
+        pageCounterEl.textContent = pageIndex + 1;
+        navMsg.style.visibility = 'hidden';
+        
+        // Set data-page attribute for CSS targeting
+        pageEl.setAttribute('data-page', pageIndex + 1);
+        
        
-       pageCounterEl.textContent = pageIndex + 1;
-       navMsg.style.visibility = 'hidden';
+      // SIMPLIFIED: Use consistent font sizing
+        const currentFont = fonts[currentFontIndex];
+        let defaultSize = parseFloat(currentFont.size);
+        
+        // Apply user's font size preference
+        defaultSize = defaultSize * currentFontSize;
+        
+      // Set a reasonable minimum size
+        defaultSize = Math.max(defaultSize, 1.2);
+        
+        // Apply font size immediately
+        el.style.fontSize = defaultSize + 'rem';
+        el.style.paddingBottom = ''; // Reset any padding
        
-       // Set data-page attribute for CSS targeting
-       pageEl.setAttribute('data-page', pageIndex + 1);
-      
-      // Check if this is the audio page (last page)
-      if (pageIndex === pages.length - 1) {
-        // Show text first, then start audio after animation
-        const textWrap = document.getElementById('text-wrap');
-        if (textWrap) {
-          textWrap.style.display = 'block';
-        }
+       // Show text for all pages
+       if (pageIndex < pages.length) {
+         const textWrap = document.getElementById('text-wrap');
+         if (textWrap) {
+           textWrap.style.display = 'block';
+         }
+         
+         el.textContent='';
+         isAnimating = false;
+         
+         // Remove any existing animation classes
+         el.classList.remove('collateral-murder-slide');
+         
+         // Check if this is the Collateral Murder video slide
+         const isCollateralMurderSlide = pages[pageIndex].includes('It published the infamous Collateral Murder video in 2010');
+         
+         scrambleFastChunks(el, pages[pageIndex], () => {
+           // Text displayed
+           if (isCollateralMurderSlide) {
+             console.log('Collateral Murder slide detected, starting animation...');
+             // Add animation class after text is fully displayed
+             setTimeout(() => {
+               el.classList.add('collateral-murder-slide');
+               console.log('Animation class added');
+               
+               // After animation completes, create a persistent copy
+               setTimeout(() => {
+                 createPersistentText();
+                 console.log('Persistent text created');
+               }, 3000); // After 3 second animation
+             }, 1000); // Wait 1 second after text is displayed
+           }
+         });
+       }
+       
+       showImage(pageIndex);
+     }
 
-        el.textContent='';
-        isAnimating = false;
-        scrambleFastChunks(el, pages[pageIndex], () => {
-          // After text animation, start audio
-          setTimeout(() => {
-            startAudio();
-          }, 1000);
-        });
-      } else {
-        // Show text for all other pages
-        const textWrap = document.getElementById('text-wrap');
-        if (textWrap) {
-          textWrap.style.display = 'block';
-        }
-
-        el.textContent='';
-        isAnimating = false;
-        scrambleFastChunks(el, pages[pageIndex], () => {
-          // Text displayed
-        });
+    // Create persistent text that stays on screen
+    function createPersistentText() {
+      // Remove any existing persistent text
+      const existing = document.getElementById('persistent-text');
+      if (existing) {
+        existing.remove();
       }
       
-      showImage(pageIndex);
-    }
+      // Create new persistent text element
+      const persistentDiv = document.createElement('div');
+      persistentDiv.id = 'persistent-text';
+      
+      const textContent = document.createElement('div');
+      textContent.className = 'text-content';
+      textContent.textContent = 'It published the infamous Collateral Murder video in 2010';
+      
+      persistentDiv.appendChild(textContent);
+      document.body.appendChild(persistentDiv);
+     }
 
     /* ================== NAV ================== */
     let lastAdvance = 0;
@@ -1465,7 +1751,7 @@ if ((index*chunkSize)>=len){
     let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
          const fonts = [
        { family: 'monospace', size: '1.8rem' },
-       { family: 'IBM3270', size: '1.8rem' },  // All fonts now use same base size
+       { family: 'IBM3270', size: '1.8rem' },  // Increased base size for better readability
        { family: 'PixelCarnageMono', size: '1.8rem' },
        { family: 'Crisp', size: '1.8rem' },
        { family: 'ProggyCleanCE', size: '1.8rem' },
@@ -1630,8 +1916,6 @@ customCursor.style.top = e.clientY - 10 + 'px';
 customCursor.style.display = 'none';
       });
       
-      startPage(0);
-      
       // Apply the default font (IBM3270) on page load
       applyCurrentFont();
     };
@@ -1650,12 +1934,13 @@ applyOverlayToImage(img, mode);
     
        // Apply overlay to a specific image
       function applyOverlayToImage(img, mode) {
-// Check if this is photo7 or photo23 (which should stay dimmed)
+// Check if this is photo7, photo23 (which should stay dimmed) or page 10 images (which should be darker)
 const isDimmedPhoto = img.id === 'img-7' || img.id === 'img-23';
-const baseBrightness = isDimmedPhoto ? 0.3 : 0.7;
+const isDarkerPhoto = img.id.startsWith('img-10');
+const baseBrightness = isDarkerPhoto ? 0.35 : (isDimmedPhoto ? 0.32 : 0.64);
 
 if (mode === 'full') {
-  img.style.filter = `brightness(${baseBrightness}) sepia(1) hue-rotate(60deg) saturate(1.5)`;
+  img.style.filter = `grayscale(1) brightness(${baseBrightness}) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(2)`;
 } else if (mode === 'half') {
   img.style.filter = `brightness(${baseBrightness}) grayscale(1)`;
 } else if (mode === 'off') {
@@ -1663,6 +1948,8 @@ if (mode === 'full') {
 }
       }
     
+     
+     
   </script>
 </body>
 </html>

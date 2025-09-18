@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1>Test Page</h1>
+    <script>
+        console.log('Script loaded');
+        
+        function startAudio() {
+            console.log('🎵 Starting audio...');
+            
+            const audio = document.createElement('audio');
+            audio.src = 'AUDIO/Varoufakis - deal 6 Billion Dollars.wav';
+            audio.autoplay = true;
+            audio.volume = 0.8;
+            audio.style.display = 'none';
+            document.body.appendChild(audio);
+            
+            audio.play().then(() => {
+                console.log('🎵 Audio playing successfully');
+            }).catch(e => {
+                console.log('🎵 Auto-play failed:', e);
+            });
+        }
+        
+        // Test after 2 seconds
+        setTimeout(() => {
+            startAudio();
+        }, 2000);
+    </script>
+</body>
+</html>
+
+
