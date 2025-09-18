@@ -147,8 +147,8 @@ function handlePasswordEntry(attempt) {
 
     runSequence(accessGrantedSequence, elements.msg, CONFIG.accessSequenceDelay, () => {
       setTimeout(() => {
-        console.log('Redirecting to lorem.html...');
-        window.location.href = 'lorem.html';
+        console.log('Redirecting to DRSEY_PITCHTEXT.html...');
+        window.location.href = 'DRSEY_PITCHTEXT.html';
       }, CONFIG.redirectDelay);
     });
   } else {

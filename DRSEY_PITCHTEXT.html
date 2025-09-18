@@ -204,10 +204,7 @@ right: 2vw;
        image-rendering: auto;
      }
      
-   /* Special rule: dim only photo7 */
-      #page img[id="img-7"] {
-filter: grayscale(1) brightness(0.32) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(2);
-      }
+   /* Special rule: dim only photo7 - REMOVED (was too dark) */
       
       /* Special rule: dim only photo23 */
       #page img[id="img-23"] {
@@ -1975,7 +1972,7 @@ if ((index*chunkSize)>=len){
         
        
       // Use simple, consistent font sizing
-        el.style.fontSize = '1.0rem';
+        el.style.fontSize = '1.2rem';
         el.style.paddingBottom = ''; // Reset any padding
        
        // Show text for all pages
@@ -2194,12 +2191,12 @@ if ((index*chunkSize)>=len){
     let currentFontIndex = 1; // Start with IBM3270 (index 1) as default
     let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
          const fonts = [
-       { family: 'monospace', size: '1.0rem' },
-       { family: 'IBM3270', size: '1.0rem' },
-       { family: 'PixelCarnageMono', size: '1.0rem' },
-       { family: 'Crisp', size: '1.0rem' },
-       { family: 'ProggyCleanCE', size: '1.0rem' },
-       { family: 'ProggySquare', size: '1.0rem' }
+       { family: 'monospace', size: '1.2rem' },
+       { family: 'IBM3270', size: '1.2rem' },
+       { family: 'PixelCarnageMono', size: '1.2rem' },
+       { family: 'Crisp', size: '1.2rem' },
+       { family: 'ProggyCleanCE', size: '1.2rem' },
+       { family: 'ProggySquare', size: '1.2rem' }
      ];
     
     function cycleFontForward() {
@@ -2372,8 +2369,8 @@ applyOverlayToImage(img, mode);
     
        // Apply overlay to a specific image
       function applyOverlayToImage(img, mode) {
-// Check if this is photo7, photo23 (which should stay dimmed) or page 10 images (which should be darker)
-const isDimmedPhoto = img.id === 'img-7' || img.id === 'img-23';
+// Check if this is photo23 (which should stay dimmed) or page 10 images (which should be darker)
+const isDimmedPhoto = img.id === 'img-23';
 const isDarkerPhoto = img.id.startsWith('img-10');
 const baseBrightness = isDarkerPhoto ? 0.35 : (isDimmedPhoto ? 0.32 : 0.64);
 
