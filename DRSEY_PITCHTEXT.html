@@ -504,7 +504,7 @@ z-index: 2 !important;
   </div>
 
   <div id="hud">
- <span class="controls">[1/2/3] color • [↑/↓] image mode • [N/B] font • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay • [M] sound • [T] test • [Q/W] sound type</span>
+ <span class="controls">[1/2/3] color • [↑/↓] image mode • [L] below • [S] side • [A] small side • [O] off • [Z/X/C] overlay • [M] sound • [T] test • [Q/W] sound type</span>
   </div>
 
   <div id="page-counter">Page <span id="current-page">1</span></div>
@@ -1974,18 +1974,8 @@ if ((index*chunkSize)>=len){
         pageEl.setAttribute('data-page', pageIndex + 1);
         
        
-      // SIMPLIFIED: Use consistent font sizing
-        const currentFont = fonts[currentFontIndex];
-        let defaultSize = parseFloat(currentFont.size);
-        
-        // Apply user's font size preference
-        defaultSize = defaultSize * currentFontSize;
-        
-      // Set a reasonable minimum size
-        defaultSize = Math.max(defaultSize, 1.2);
-        
-        // Apply font size immediately
-        el.style.fontSize = defaultSize + 'rem';
+      // Use simple, consistent font sizing
+        el.style.fontSize = '1.0rem';
         el.style.paddingBottom = ''; // Reset any padding
        
        // Show text for all pages
@@ -2200,16 +2190,16 @@ if ((index*chunkSize)>=len){
        }
      });
 
-    // Font cycling functionality - UPDATED WITH 6 FONTS - IBM3270 DEFAULT
+    // Simplified font system
     let currentFontIndex = 1; // Start with IBM3270 (index 1) as default
     let currentFontSize = 1.0; // Size multiplier (1.0 = 100% of base size)
          const fonts = [
-       { family: 'monospace', size: '1.2rem' },
-       { family: 'IBM3270', size: '1.2rem' },  // Reduced base size for better fit
-       { family: 'PixelCarnageMono', size: '1.2rem' },
-       { family: 'Crisp', size: '1.2rem' },
-       { family: 'ProggyCleanCE', size: '1.2rem' },
-       { family: 'ProggySquare', size: '1.2rem' }
+       { family: 'monospace', size: '1.0rem' },
+       { family: 'IBM3270', size: '1.0rem' },
+       { family: 'PixelCarnageMono', size: '1.0rem' },
+       { family: 'Crisp', size: '1.0rem' },
+       { family: 'ProggyCleanCE', size: '1.0rem' },
+       { family: 'ProggySquare', size: '1.0rem' }
      ];
     
     function cycleFontForward() {
@@ -2229,32 +2219,18 @@ if ((index*chunkSize)>=len){
       // Update the CSS custom property
       document.documentElement.style.setProperty('--font-family', selectedFont.family);
       
-      // Calculate the actual size with the current multiplier
-      const baseSize = parseFloat(selectedFont.size);
-      const actualSize = (baseSize * currentFontSize) + 'rem';
-      
-      // Apply the font family and size to main text elements (affected by size controls)
-      const mainTextElements = document.querySelectorAll('#unscramble, #prompt');
-      mainTextElements.forEach(el => {
+      // Apply font family to all text elements
+      const allTextElements = document.querySelectorAll('#unscramble, #prompt, #nav-msg, #nav-prev, #nav-next, #page-counter');
+      allTextElements.forEach(el => {
         if (el) {
           el.style.fontFamily = selectedFont.family;
-          el.style.fontSize = actualSize;
-        }
-      });
-      
-      // Apply only font family to navbar and page counter (immune to size controls)
-      const navElements = document.querySelectorAll('#nav-msg, #nav-prev, #nav-next, #page-counter');
-      navElements.forEach(el => {
-        if (el) {
-          el.style.fontFamily = selectedFont.family;
-          // Keep original sizes: nav-msg (0.9rem), nav-prev/next (1.5rem), page-counter (0.7rem)
         }
       });
       
       // Also apply to body to ensure all elements inherit the font
       document.body.style.fontFamily = selectedFont.family;
       
-      console.log(`Font changed to: ${selectedFont.family} at size ${actualSize} (multiplier: ${currentFontSize})`);
+      console.log(`Font changed to: ${selectedFont.family}`);
     }
 
     window.addEventListener('keydown', (e) => {
@@ -2272,12 +2248,7 @@ if ((index*chunkSize)>=len){
  markUserSetMode(currentPage); 
  showImage(currentPage); 
        }
-      else if (k==='n'||k==='N'){ 
-        cycleFontForward();
-      }
-      else if (k==='b'||k==='B'){ 
-        cycleFontBackward();
-      }
+      // Font cycling removed - using fixed font system
       else if (k==='l'||k==='L'){ 
 pageModes[currentPage]=IMG_BELOW; 
 markUserSetMode(currentPage); 
